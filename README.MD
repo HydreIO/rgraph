@@ -12,9 +12,15 @@
 
 A high performance Node.js reactive RedisGraph client. (written in 100 lines)
 
+## Install
+
+```
+npm i @hydre/rgraph
+```
+
 ## :book: Documentation
 
-> This is a work in progress
+> This doc is a work in progress
 
 ```js
 import rgraph from '@hydre/rgraph'
