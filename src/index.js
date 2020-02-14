@@ -2,14 +2,14 @@ import { map, concat, flatMap, concatMap, tap, toArray, reduce } from 'rxjs/oper
 import { from, zip, defer, of } from 'rxjs'
 import { promisify } from 'util'
 import { RESULT_TYPE, DATA_TYPE } from './constant'
-
+const _transient = Symbol()
 const debug = require('debug')('rgraph')
 const respifyValue = v => {
-  if (v === '') return ''
-  else if (!v) return 'NULL'
+  if (v === _transient) return ''
+  else if (v === undefined || v === null) return 'NULL'
   switch (typeof v) {
     case 'boolean': return v ? 'true' : 'false'
-    case 'number': return v % 1 === 0 ? Number.isSafeInteger(v) ? v : `${v}` : Number.parseFloat(v).toPrecision(15)
+    case 'number': return v % 1 === 0 ? Number.isSafeInteger(v) ? v : `'${v}'` : Number.parseFloat(v).toPrecision(15)
     case 'string':
     case 'bigint': return `'${v}'`
     case 'function':
@@ -77,7 +77,7 @@ export default client => {
     }))
     return {
       delete: ~sendCommand('graph.DELETE', [graphId]), run: (...[raw, ...args]) => {
-        args.push('')
+        args.push(_transient)
         return zip(from(raw), from(args).pipe(map(respifyValue)))
           .pipe(
             reduce((acc, [a, b]) => [...acc, a, b], []),
