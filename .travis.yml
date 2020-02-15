@@ -9,14 +9,13 @@ script:
   - npm run build
 
 before_deploy:
-  - echo $NPM_EMAIl
   - echo "Deploying to npm ..."
 
 deploy:
   provider: npm
   edge: true
   email: '$NPM_EMAIL'
-  api_key: '$NPM_TOKEN'
+  api_token: '$NPM_TOKEN'
   cleanup: false
   on:
     tags: true
