@@ -156,9 +156,10 @@ Yes i know, feel free to tweet bad stuff about me!
 
 **Can i use nested objects ?**
 
-No, cypher doesn't support them so don't
+No, cypher doesn't support them so don't do this
 ```js
 `MERGE (:User { foo: 5, bar: ${{ baz: 1 }})`
 ```
+because you will get an unpleasant error in your litle terminal billy
 
 **Edit me**
