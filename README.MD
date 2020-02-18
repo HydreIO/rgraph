@@ -130,6 +130,8 @@ import { Internals } from '@hydre/rgraph'
 
 Welcome to the era of fast graphs..
 
+![](https://forthebadge.com/images/badges/certified-snoop-lion.svg)
+
 ```js
 import { interval } from 'rxjs'
 import { concatMapTo } from 'rxjs/operators'
