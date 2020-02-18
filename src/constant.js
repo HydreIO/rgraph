@@ -17,3 +17,12 @@ export const DATA_TYPE = {
   NODE: 8,
   PATH: 9,
 }
+
+export const SYMBOLS = {
+  TRANSIENT: Symbol('transient'),
+  ID: Symbol('id'),
+  NODE_LABELS: Symbol('nodeLabels'),
+  EDGE_LABEL: Symbol('edgeLabel'),
+  SOURCE_NODE_ID: Symbol('sourceNodeId'),
+  DESTINATION_NODE_ID: Symbol('destinationNodeId'),
+}

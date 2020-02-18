@@ -1,7 +1,7 @@
 import { defer, from, of, zip } from 'rxjs'
 import { flatMap, map, toArray } from 'rxjs/operators'
 
-import { DATA_TYPE, RESULT_TYPE } from './constant'
+import { DATA_TYPE, RESULT_TYPE, SYMBOLS } from './constant'
 
 // Provide parsing observables
 export default ({ cachedLabels, cachedPropertyKeys, cachedRelationKeys }) => {
@@ -33,17 +33,17 @@ export default ({ cachedLabels, cachedPropertyKeys, cachedRelationKeys }) => {
   const parseProperty$ = ([key, type, value]) => defer(async () => [await cachedPropertyKeys(key), await parseScalar$([type, value]).toPromise()])
   const parseProperties$ = properties => from(properties).pipe(flatMap(parseProperty$), toArray(), map(Object.fromEntries))
   const parseNode$ = ([id, nodeLabels, properties]) => defer(async () => ({
-    id,
-    labels: await from(nodeLabels).pipe(flatMap(i => from(cachedLabels(i))), toArray()).toPromise(),
-    properties: await parseProperties$(properties).toPromise(),
+    [SYMBOLS.ID]: id,
+    [SYMBOLS.NODE_LABELS]: await from(nodeLabels).pipe(flatMap(i => from(cachedLabels(i))), toArray()).toPromise(),
+    ...(await parseProperties$(properties).toPromise()),
   }))
 
   const parseEdge$ = ([id, type, sourceNodeId, destinationNodeId, properties]) => defer(async () => ({
-    id,
-    label: await cachedRelationKeys(type),
-    sourceNodeId,
-    destinationNodeId,
-    properties: await parseProperties$(properties).toPromise(),
+    [SYMBOLS.ID]: id,
+    [SYMBOLS.EDGE_LABEL]: await cachedRelationKeys(type),
+    [SYMBOLS.SOURCE_NODE_ID]: sourceNodeId,
+    [SYMBOLS.DESTINATION_NODE_ID]: destinationNodeId,
+    ...(await parseProperties$(properties).toPromise()),
   }))
 
   const parsePathRow$ = path => from(path).pipe(flatMap(parseScalar$), toArray())

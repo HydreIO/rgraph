@@ -1,18 +1,20 @@
 import { from, zip } from 'rxjs'
 import { flatMap, map, reduce, tap } from 'rxjs/operators'
 
+import { SYMBOLS } from './constant'
 import parser from './parser'
 import redisGraph from './redis'
 
-const transient = Symbol('transient')
 const debug = require('debug')('rgraph')
+
+const { TRANSIENT, ...OtherSymbols } = SYMBOLS
 
 /**
  * Ensure that redis graph understand the value we provide (https://oss.redislabs.com/redisgraph/result_structure/)
  * @param {Any} v value to transform
  */
 const respifyValue = v => {
-  if (v === transient) return ''
+  if (v === TRANSIENT) return ''
   if (v === undefined || v === null) return 'NULL'
   switch (typeof v) {
     case 'boolean': return v ? 'true' : 'false'
@@ -25,13 +27,20 @@ const respifyValue = v => {
     case 'function':
     case 'symbol': return undefined
 
-    case 'object':
-      if (Array.isArray(v)) return `[${v.map(i => respifyValue(i))}]`
-      return `{${Object.entries(v).map(([key, value]) => `${key}:${respifyValue(value)}`).join(',')}}`
+    // eslint-disable-next-line no-use-before-define
+    case 'object': return respifyObject(v)
+
     // skip default
   }
 }
 
+const respifyObject = object => {
+  if (Array.isArray(object)) return `[${object.filter(value => typeof value !== 'symbol').map(respifyValue)}]`
+  const filteredObject = Object.fromEntries(Object.entries(object).filter(([key]) => typeof key !== 'symbol'))
+  return `{${Object.entries(filteredObject).map(([key, value]) => `${key}:${respifyValue(value)}`).join(',')}}`
+}
+
+export const Internals = OtherSymbols
 export default client => {
   const partialGraph = redisGraph(client)
   return graphId => {
@@ -41,11 +50,11 @@ export default client => {
     return {
       delete: deleteGraph,
       run: (...[raw, ...queryArguments]) => {
-        queryArguments.push(transient)
+        queryArguments.push(TRANSIENT)
         return zip(from(raw), from(queryArguments).pipe(map(respifyValue))).pipe(
           reduce((accumulator, [a, b]) => [...accumulator, a, b], []),
           map(a => a.join('')),
-          tap(cypherQuery => graphDebug('%O', cypherQuery)),
+          tap(cypherQuery => graphDebug(cypherQuery)),
           flatMap(cypherQuery => cypherQuery |> queryGraph |> from),
           tap(([, , stats]) => stats.forEach(s => s |> graphDebug)),
           flatMap(parseResult$),
