@@ -40,7 +40,7 @@ npm i @hydre/rgraph
 import rgraph from '@hydre/rgraph'
 import redis from 'redis'
 
-const debug = require('debug')('test')
+const debug = require('debug')('graph')
 void async function () {
   const graph = rgraph(redis.createClient('redis://127.0.0.1:6379/'))('myGraph')
   const user = { uuid: 'xxx-xx-xxx', name: 'Tony' }
@@ -62,7 +62,7 @@ const redisClient = redis.createClient(...)
 const useGraph = rgraph(redisClient)
 ```
 
-Wow now you could get as much as graphs as you want 💃 !
+Wow now you can get as much graphs as you want 💃 !
 go ahead don't be afraid it's redis, not neo4j 🦐
 
 ```js
@@ -72,7 +72,7 @@ const thanos = useGraph('hail-hydra')
 const bar = useGraph('barGraph')
 ```
 
-Run any `cypher` query with a tag template or delete your poor graph
+Run any [Cypher](https://neo4j.com/docs/cypher-manual/current/) query with a tag template or delete your poor graph
 ```js
 await foo.run`MATCH (n) RETURN n`.toPromise()
 await thanos.delete()
@@ -84,7 +84,9 @@ like querying a graph with the result of another damn easily.. yeah it's real
 ```js
 foo.run`MATCH path = ()-[]-() RETURN path`
   // here we map the result to extract the nodes, then we flatMap with another query using the retrieved node
-  .pipe(map(({ path: { nodes } }) => nodes[0]), flatMap(node => bar.run`MATCH (n ${node}) RETURN n`))
+  .pipe(
+    map(result => result.path.nodes[0]),
+    flatMap(node => bar.run`MATCH (n ${node}) RETURN n`))
   .subscribe(({ n }))
 ```
 
@@ -146,15 +148,15 @@ interval(1000).pipe(concatMapTo(result$), map(({ path: { nodes } }) => `Found ${
 
 ## FAQ
 
-- Hey calling a function directly with a tag template literal is a bad practice!!
+**Hey calling a function directly with a tag template literal is a bad practice!!**
 
 Yes i know, feel free to tweet bad stuff about me!
 
-- Can i use nested objects ?
+**Can i use nested objects ?**
 
 No, cypher doesn't support them so don't
 ```js
 `MERGE (:User { foo: 5, bar: ${{ baz: 1 }})`
 ```
 
-- [EDIT ME]
+**Edit me**
