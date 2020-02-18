@@ -10,7 +10,7 @@
 [discord]: https://img.shields.io/discord/398114799776694272.svg?logo=discord&style=for-the-badge
 [discordlink]: https://discord.gg/bRSpRpD
 
-A high performance Node.js reactive RedisGraph client. Written on top of RxJS in 100 lines
+A high performance Node.js reactive RedisGraph client. Built on RxJS
 
 ## Install
 
