@@ -4,7 +4,7 @@
 
 [![][discord]][discordlink] [![][twitter]][twitterlink]
 
-[licence]: https://img.shields.io/github/license/HydreIO/rgraph.svg?style=for-the-badge
+[licence]: https://img.shields.io/github/license/HydreIO/rgraph?style=for-the-badge
 [npm]: https://img.shields.io/npm/v/@hydre/rgraph.svg?logo=npm&style=for-the-badge
 [npmlink]: https://www.npmjs.com/package/@hydre/rgraph
 [travis]: https://img.shields.io/travis/com/HydreIO/rgraph.svg?logo=travis&style=for-the-badge
