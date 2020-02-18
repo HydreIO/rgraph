@@ -20,7 +20,7 @@ export default client => {
       }
     }
     return {
-      deleteGraph: call('graph.DELETE', [graphId]),
+      deleteGraph: ~call('graph.DELETE', [graphId]),
       queryGraph: queryString => query([queryString, '--compact']),
       cachedLabels: cacheProcedure('db.labels()'),
       cachedRelationKeys: cacheProcedure('db.relationshipTypes()'),

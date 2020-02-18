@@ -37,6 +37,7 @@ export default client => {
   return graphId => {
     const { deleteGraph, queryGraph, ...procedures } = partialGraph(graphId)
     const parseResult$ = parser(procedures)
+    const graphDebug = debug.extend(graphId)
     return {
       delete: deleteGraph,
       run: (...[raw, ...queryArguments]) => {
@@ -44,9 +45,9 @@ export default client => {
         return zip(from(raw), from(queryArguments).pipe(map(respifyValue))).pipe(
           reduce((accumulator, [a, b]) => [...accumulator, a, b], []),
           map(a => a.join('')),
-          tap(q => debug.extend('running')('%O', q)),
+          tap(cypherQuery => graphDebug('%O', cypherQuery)),
           flatMap(cypherQuery => cypherQuery |> queryGraph |> from),
-          tap(([, , stats]) => stats.forEach(s => s |> debug.extend('stats'))),
+          tap(([, , stats]) => stats.forEach(s => s |> graphDebug)),
           flatMap(parseResult$),
         )
       },
