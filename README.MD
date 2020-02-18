@@ -15,7 +15,7 @@
 [discordlink]: https://discord.gg/bRSpRpD
 [npmdl]: https://img.shields.io/npm/dw/@hydre/rgraph.svg?color=%239C27B0&style=for-the-badge
 
-A high performance Node.js reactive RedisGraph client. Built on RxJS
+A high performance Node.js reactive [RedisGraph](https://github.com/RedisGraph/RedisGraph) client. Built on RxJS
 
 - Light
 - RxJS observables
