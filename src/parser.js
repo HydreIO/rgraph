@@ -14,7 +14,7 @@ export default ({ cachedLabels, cachedPropertyKeys, cachedRelationKeys }) => {
 
       case DATA_TYPE.BOOLEAN: return of(value === 'true')
 
-      case DATA_TYPE.ARRAY: return from(value).pipe(flatMap(parseScalar$))
+      case DATA_TYPE.ARRAY: return from(value).pipe(flatMap(parseScalar$), toArray())
 
       // as i don't wan't to declare mutable variables it's preferable to disable linting for this particular recursive case
       // eslint-disable-next-line no-use-before-define
