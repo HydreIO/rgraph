@@ -17,6 +17,13 @@
 
 A high performance Node.js reactive RedisGraph client. Built on RxJS
 
+- Light
+- RxJS observables
+- Procedure caching
+- Multi graph with partial application
+- Template literal parameters
+- Extends redis client
+
 ## Install
 
 ```
@@ -24,6 +31,8 @@ npm i @hydre/rgraph
 ```
 
 ## TL;DR
+
+![](https://i.imgur.com/CHEHoWB.png)
 
 ```js
 import rgraph from '@hydre/rgraph'
@@ -39,4 +48,111 @@ void async function () {
 }()
 ```
 
-![](https://i.imgur.com/V9dTbFi.png)
+## Usage
+
+Get yourself some tea and meat by providing your redis client
+
+```js
+import rgraph from '@hydre/rgraph'
+import redis from 'redis'
+
+const redisClient = redis.createClient(...)
+const useGraph = rgraph(redisClient)
+```
+
+Wow now you could get as much as graphs as you want 💃 !
+go ahead don't be afraid it's redis, not neo4j 🦐
+
+```js
+const myFirstGraph = useGraph('myFirstGraph')
+const foo = useGraph('anotherGraph')
+const thanos = useGraph('hail-hydra')
+const bar = useGraph('barGraph')
+```
+
+Run any `cypher` query with a tag template or delete your poor graph
+```js
+await foo.run`MATCH (n) RETURN n`.toPromise()
+await thanos.delete()
+```
+
+The run function give you an RxJS observable, you can do pretty neat powerful dank stuff
+like querying a graph with the result of another damn easily.. yeah it's real
+
+```js
+foo.run`MATCH path = ()-[]-() RETURN path`
+  // here we map the result to extract the nodes, then we flatMap with another query using the retrieved node
+  .pipe(map(({ path: { nodes } }) => nodes[0]), flatMap(node => bar.run`MATCH (n ${node}) RETURN n`))
+  .subscribe(({ n }))
+```
+
+Let me show you the result structure for each type, with the visible properties
+you also have access to some internals infos like ids and labels etc..
+
+```js
+import { Internals } from '@hydre/rgraph'
+
+{
+  // For a scalar
+  ['label in the RETURN statement']: 'value', // the returned value
+
+  // For a node
+  ['label in the RETURN statement']: {
+    ['each']: ...,
+    ['node']: ...,
+    ['properties']: ...,
+    [Internals.ID]: 0, // the node internal id
+    [Internals.NODE_LABELS]: [], // the node labels
+  },
+
+  // For an edge
+  ['label in the RETURN statement']: {
+    ['each']: ...,
+    ['node']: ...,
+    ['properties']: ...,
+    [Internals.ID]: 0, // the edge internal id
+    [Internals.EDGE_LABEL]: 'label', // the edge label
+    [Internals.SOURCE_NODE_ID]: 0, // the source node id
+    [Internals.DESTINATION_NODE_ID]: 0 // the destination id
+  },
+
+  // For a path
+  ['label in the RETURN statement']: {
+    nodes: [], // an array of nodes (same representation as above but without the return label)
+    edges: [] // an array of edges
+  }
+}
+```
+
+Welcome to the era of fast graphs..
+
+```js
+import { interval } from 'rxjs'
+import { concatMapTo } from 'rxjs/operators'
+
+const debug = require('debug')('graph')
+
+const result$ = myFirstGraph.run`
+MERGE (foo:User ${user})-[:Knows]->(thanos { name: 'Thanos', age: ${5 + 5}, a: ${true}, b: ${922337203}, c: ${51.000000000016} })
+WITH foo, thanos
+MATCH path = ()-[]-()
+RETURN path`
+
+interval(1000).pipe(concatMapTo(result$), map(({ path: { nodes } }) => `Found ${nodes.length} nodes`)).subscribe(debug)
+```
+![](https://i.imgur.com/s2wfP9y.png)
+
+## FAQ
+
+- Hey calling a function directly with a tag template literal is a bad practice!!
+
+Yes i know, feel free to tweet bad stuff about me!
+
+- Can i use nested objects ?
+
+No, cypher doesn't support them so don't
+```js
+`MERGE (:User { foo: 5, bar: ${{ baz: 1 }})`
+```
+
+- [EDIT ME]
