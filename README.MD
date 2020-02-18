@@ -17,12 +17,12 @@
 
 A high performance Node.js reactive [RedisGraph](https://github.com/RedisGraph/RedisGraph) client. Built on RxJS
 
-- Light
+- Light & Fast
+- Easy to use
 - RxJS observables
 - Procedures caching
 - Multi graph with partial application
 - Template literal parameters
-- Extends redis client
 
 > Hey ! i'm brand new, beware and be ready to fill some issues 📃
 
