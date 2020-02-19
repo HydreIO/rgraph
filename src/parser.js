@@ -1,7 +1,10 @@
 import { defer, from, of, zip } from 'rxjs'
-import { flatMap, map, toArray } from 'rxjs/operators'
+import { flatMap, map, toArray, tap } from 'rxjs/operators'
+import { inspect } from 'util'
 
 import { DATA_TYPE, RESULT_TYPE, SYMBOLS } from './constant'
+
+const debug = require('debug')('rgraph').extend('parser')
 
 // Provide parsing observables
 export default ({ cachedLabels, cachedPropertyKeys, cachedRelationKeys }) => {
@@ -52,20 +55,24 @@ export default ({ cachedLabels, cachedPropertyKeys, cachedRelationKeys }) => {
     edges: await parsePathRow$(edges).toPromise(),
   }))
 
-  return ([header, [rawCell]]) => zip(header |> from, rawCell |> from).pipe(
-    flatMap(([[cellType, label], cell]) => defer(async () => {
-      switch (cellType) {
-        case RESULT_TYPE.NODE: return [label, await parseNode$(cell).toPromise()]
+  return ([header, [rawCell]]) => {
+    if (!header || !rawCell) return of(undefined).pipe(tap(() => debug('no result found')))
+    return zip(header |> from, rawCell |> from).pipe(
+      flatMap(([[cellType, label], cell]) => defer(async () => {
+        switch (cellType) {
+          case RESULT_TYPE.NODE: return [label, await parseNode$(cell).toPromise()]
 
-        case RESULT_TYPE.RELATION: return [label, await parseEdge$(cell).toPromise()]
+          case RESULT_TYPE.RELATION: return [label, await parseEdge$(cell).toPromise()]
 
-        case RESULT_TYPE.SCALAR: return [label, await parseScalar$(cell).toPromise()]
+          case RESULT_TYPE.SCALAR: return [label, await parseScalar$(cell).toPromise()]
 
-        case RESULT_TYPE.UNKNOWN: throw new Error(`The cell of type ${cellType} is unkown billy, the end is near.. get cover!`)
-        // skip default
-      }
-    })),
-    toArray(),
-    map(Object.fromEntries),
-  )
+          case RESULT_TYPE.UNKNOWN: throw new Error(`The cell of type ${cellType} is unkown billy, the end is near.. get cover!`)
+          // skip default
+        }
+      })),
+      toArray(),
+      map(Object.fromEntries),
+      tap(result => debug('%s', inspect(result, false, null, true)))
+    )
+  }
 }

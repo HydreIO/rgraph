@@ -50,6 +50,10 @@ void async function () {
 }()
 ```
 
+## Debug
+
+allow debug logs with the `DEBUG='rgraph*'` env variable
+
 ## Usage
 
 Get yourself some tea and meat by providing your redis client
