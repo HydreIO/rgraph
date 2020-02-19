@@ -1,6 +1,6 @@
 {
 	"name": "@hydre/rgraph",
-	"version": "1.1.5",
+	"version": "1.2.0",
 	"description": "A reactive javascript driver for Redis Graph",
 	"main": "index.js",
 	"scripts": {
