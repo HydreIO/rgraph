@@ -12,6 +12,9 @@ const { TRANSIENT, ...OtherSymbols } = SYMBOLS
 /**
  * Ensure that redis graph understand the value we provide (https://oss.redislabs.com/redisgraph/result_structure/)
  * @param {Any} v value to transform
+ *
+ * note: Thinking about using util.inspect(obj, { compact: true, depth: 1, breakLength: Infinity, maxArrayLength: Infinity })
+ * but we would have less control
  */
 const respifyValue = v => {
   if (v === TRANSIENT) return ''
