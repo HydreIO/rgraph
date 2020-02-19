@@ -22,7 +22,7 @@ A high performance Node.js reactive [RedisGraph](https://github.com/RedisGraph/R
 - RxJS observables
 - Procedures caching
 - Multi graph with partial application
-- Template literal parameters
+- Tagged templates literals
 
 > Hey ! i'm brand new, beware and be ready to fill some issues 📃
 
@@ -150,9 +150,9 @@ interval(1000).pipe(concatMapTo(result$), map(({ path: { nodes } }) => `Found ${
 
 ## FAQ
 
-**Hey calling a function directly with a tag template literal is a bad practice!!**
+**Hey calling a function directly with a template literal is a bad practice!!**
 
-Yes i know, feel free to tweet bad stuff about me!
+In our case it become a tagged template, an extremly powerful feature that apply for this usecase, but feel free to tweet bad stuff about me!
 
 **Can i use nested objects ?**
 
