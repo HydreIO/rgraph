@@ -2,7 +2,7 @@
 	"name": "@hydre/rgraph",
 	"version": "1.1.5",
 	"description": "A reactive javascript driver for Redis Graph",
-	"main": "lib/index.js",
+	"main": "index.js",
 	"scripts": {
 		"prepack": "npm run build",
 		"lint": "eslint --color src/.",

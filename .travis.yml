@@ -7,6 +7,8 @@ node_js:
 
 script:
   - npm run build
+  - rm -rf src
+  - mv lib/* ./
 
 before_deploy:
   - echo "Deploying to npm ..."

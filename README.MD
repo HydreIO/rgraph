@@ -132,6 +132,17 @@ import { Internals } from '@hydre/rgraph'
 }
 ```
 
+## Operators
+
+The library provide some operators to allow usage of cypher feature not yet supported by RedisGraph
+
+```js
+import { plusEquals } from '@hydre/rgraph/operators'
+
+const vanillaQuery = `SET user += $user`
+const rgraphQuery = `SET ${plusEquals('user', user)}`
+```
+
 Welcome to the era of fast graphs..
 
 ![](https://forthebadge.com/images/badges/certified-snoop-lion.svg)
@@ -165,5 +176,8 @@ No, cypher doesn't support them so don't do this
 `MERGE (:User { foo: 5, bar: ${{ baz: 1 }})`
 ```
 because you will get an unpleasant error in your litle terminal billy
+
+**My bigint is becoming a string, why ?**
+I'm not sure how to parse them yet
 
 **Edit me**

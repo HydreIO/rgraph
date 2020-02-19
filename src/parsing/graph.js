@@ -2,7 +2,7 @@ import { defer, from, of, zip } from 'rxjs'
 import { flatMap, map, toArray, tap } from 'rxjs/operators'
 import { inspect } from 'util'
 
-import { DATA_TYPE, RESULT_TYPE, SYMBOLS } from './constant'
+import { DATA_TYPE, RESULT_TYPE, SYMBOLS } from '../constant'
 
 const debug = require('debug')('rgraph').extend('parser')
 
@@ -72,7 +72,7 @@ export default ({ cachedLabels, cachedPropertyKeys, cachedRelationKeys }) => {
       })),
       toArray(),
       map(Object.fromEntries),
-      tap(result => debug('%s', inspect(result, false, null, true)))
+      tap(debug)
     )
   }
 }
