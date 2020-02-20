@@ -137,7 +137,7 @@ import { Internals } from '@hydre/rgraph'
 The library provide some operators to allow usage of cypher feature not yet supported by RedisGraph
 
 ```js
-import { plusEquals } from '@hydre/rgraph/operators'
+import { plusEquals } from '@hydre/rgraph/lib/operators'
 
 const vanillaQuery = `SET user += $user`
 const rgraphQuery = `SET ${plusEquals('user', user)}`
