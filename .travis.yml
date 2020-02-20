@@ -10,6 +10,8 @@ script:
 
 before_deploy:
   - echo "Deploying to npm ..."
+  - rm -rf src
+  - mv lib/* ./
 
 deploy:
   provider: npm

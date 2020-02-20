@@ -4,7 +4,6 @@
 	"description": "A reactive javascript driver for Redis Graph",
 	"main": "index.js",
 	"scripts": {
-		"prepack": "npm run build",
 		"lint": "eslint --color src/.",
 		"build": "babel src -d lib",
 		"postversion": "git push && git push --tags"
