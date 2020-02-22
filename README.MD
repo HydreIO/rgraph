@@ -24,7 +24,8 @@ A high performance Node.js reactive [RedisGraph](https://github.com/RedisGraph/R
 - Multi graph with partial application
 - Tagged templates literals
 
-> Hey ! i'm brand new, beware and be ready to fill some issues 📃
+> RedisGraph is not yet production ready, we are fully hyped by future release and will closely follow their development
+> to keep this library up to date and hope to see more and more peoples using RedisGraph 📃
 
 ## Install
 
