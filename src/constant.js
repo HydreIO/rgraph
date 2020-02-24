@@ -25,5 +25,5 @@ export const SYMBOLS = {
   EDGE_LABEL: Symbol('edgeLabel'),
   SOURCE_NODE_ID: Symbol('sourceNodeId'),
   DESTINATION_NODE_ID: Symbol('destinationNodeId'),
-  OPERATOR: Symbol('operator')
+  OPERATOR: Symbol('operator'),
 }

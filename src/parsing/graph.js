@@ -1,10 +1,12 @@
-import { defer, from, of, zip } from 'rxjs'
-import { flatMap, map, toArray, tap } from 'rxjs/operators'
-import { inspect } from 'util'
+import Debug from 'debug'
+import rxjs from 'rxjs'
+import operators from 'rxjs/operators'
 
 import { DATA_TYPE, RESULT_TYPE, SYMBOLS } from '../constant'
 
-const debug = require('debug')('rgraph').extend('parser')
+const { defer, from, of, zip } = rxjs
+const { flatMap, map, tap, toArray } = operators
+const debug = Debug('rgraph').extend('parser')
 
 // Provide parsing observables
 export default ({ cachedLabels, cachedPropertyKeys, cachedRelationKeys }) => {
@@ -57,7 +59,7 @@ export default ({ cachedLabels, cachedPropertyKeys, cachedRelationKeys }) => {
 
   return ([header, [rawCell]]) => {
     if (!header || !rawCell) return of(undefined).pipe(tap(() => debug('no result found')))
-    return zip(header |> from, rawCell |> from).pipe(
+    return zip(from(header), from(rawCell)).pipe(
       flatMap(([[cellType, label], cell]) => defer(async () => {
         switch (cellType) {
           case RESULT_TYPE.NODE: return [label, await parseNode$(cell).toPromise()]
@@ -72,7 +74,7 @@ export default ({ cachedLabels, cachedPropertyKeys, cachedRelationKeys }) => {
       })),
       toArray(),
       map(Object.fromEntries),
-      tap(debug)
+      tap(debug),
     )
   }
 }

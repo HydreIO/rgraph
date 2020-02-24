@@ -5,13 +5,10 @@ os: linux
 node_js:
   - node
 
-script:
-  - npm run build
-
 before_deploy:
   - echo "Deploying to npm ..."
   - rm -rf src
-  - mv lib/* ./
+  - mv src/* ./
 
 deploy:
   provider: npm
