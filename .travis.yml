@@ -7,8 +7,6 @@ node_js:
 
 before_deploy:
   - echo "Deploying to npm ..."
-  - rm -rf src
-  - mv src/* ./
 
 deploy:
   provider: npm

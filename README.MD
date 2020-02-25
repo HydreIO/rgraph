@@ -179,6 +179,11 @@ No, cypher doesn't support them so don't do this
 because you will get an unpleasant error in your litle terminal billy
 
 **My bigint is becoming a string, why ?**
+
 I'm not sure how to parse them yet
+
+**Commonjs support**
+
+I don't plan to support commonjs as i don't plan to ask tesla to use fuel
 
 **Edit me**

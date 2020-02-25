@@ -4,7 +4,7 @@ import { promisify } from 'util'
 export default client => {
   const call = promisify(client.send_command).bind(client)
   return graphId => {
-    const query = queryArguments => call('graph.QUERY', [graphId, ...queryArguments])
+    const query = async queryArguments => call('graph.QUERY', [graphId, ...queryArguments])
     // following caching optimization as described here https://oss.redislabs.com/redisgraph/client_spec/#procedure-calls
     const cacheProcedure = procedure => {
       const monad = { keys: [] }
@@ -20,7 +20,7 @@ export default client => {
       }
     }
     return {
-      deleteGraph: ~call('graph.DELETE', [graphId]),
+      deleteGraph: () => call('graph.DELETE', [graphId]),
       queryGraph: queryString => query([queryString, '--compact']),
       cachedLabels: cacheProcedure('db.labels()'),
       cachedRelationKeys: cacheProcedure('db.relationshipTypes()'),

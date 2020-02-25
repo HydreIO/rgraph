@@ -4,6 +4,9 @@
 	"description": "A reactive javascript driver for Redis Graph",
 	"main": "src/index.js",
 	"type": "module",
+	"exports":{
+		"./operators": "./src/operators"
+	},
 	"scripts": {
 		"lint": "eslint --color src/. && echo -e \"\\033[32mLint success :)\"",
 		"postversion": "git push && git push --tags"

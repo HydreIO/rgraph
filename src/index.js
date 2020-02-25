@@ -16,6 +16,7 @@ export const Internals = OtherSymbols
 export default client => {
   const partialGraph = redis(client)
   return graphId => {
+    if (!graphId) throw new Error('Missing graph ID')
     const { deleteGraph, queryGraph, ...procedures } = partialGraph(graphId)
     const parseResult$ = graphParser(procedures)
     const graphDebug = debug.extend(graphId)
