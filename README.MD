@@ -45,14 +45,15 @@ node --harmony --experimental-specifier-resolution=node mylib/index.js
 ```js
 import rgraph from '@hydre/rgraph'
 import redis from 'redis'
+import debug from 'debug'
 
-const debug = require('debug')('graph')
+const log = debug('graph')
 void async function () {
   const graph = rgraph(redis.createClient('redis://127.0.0.1:6379/'))('myGraph')
   const user = { uuid: 'xxx-xx-xxx', name: 'Tony' }
-  debug('%O', await graph.run`MERGE (tony:User ${user}) RETURN tony`.toPromise())
+  log('%O', await graph.run`MERGE (tony:User ${user}) RETURN tony`.toPromise())
   await graph.delete()
-  debug('Graph deleted!')
+  log('Graph deleted!')
 }()
 ```
 
@@ -156,8 +157,9 @@ Welcome to the era of fast graphs..
 ```js
 import { interval } from 'rxjs'
 import { concatMapTo } from 'rxjs/operators'
+import debug from 'debug'
 
-const debug = require('debug')('graph')
+const log = debug('graph')
 
 const result$ = myFirstGraph.run`
 MERGE (foo:User ${user})-[:Knows]->(thanos { name: 'Thanos', age: ${5 + 5}, a: ${true}, b: ${922337203}, c: ${51.000000000016} })
@@ -165,7 +167,7 @@ WITH foo, thanos
 MATCH path = ()-[]-()
 RETURN path`
 
-interval(1000).pipe(concatMapTo(result$), map(({ path: { nodes } }) => `Found ${nodes.length} nodes`)).subscribe(debug)
+interval(1000).pipe(concatMapTo(result$), map(({ path: { nodes } }) => `Found ${nodes.length} nodes`)).subscribe(log)
 ```
 ![](https://i.imgur.com/s2wfP9y.png)
 
