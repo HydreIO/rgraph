@@ -33,6 +33,11 @@ A high performance Node.js reactive [RedisGraph](https://github.com/RedisGraph/R
 npm i @hydre/rgraph
 ```
 
+**This library recently dropped babel and only use ES Modules with configured "type":"module" and "exports", you'll need the latest node version and probably this line**
+```
+node --harmony --experimental-specifier-resolution=node mylib/index.js
+```
+
 ## TL;DR
 
 ![](https://i.imgur.com/CHEHoWB.png)
