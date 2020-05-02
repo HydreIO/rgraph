@@ -1,21 +1,20 @@
-![][licence] [![][npm]][npmlink] [![][travis]][travislink] [![][npmdl]][npmlink]
-
 <h1 align=center>@hydre/rgraph</h1>
+<p align=center>
+  <img src="https://img.shields.io/github/license/hydreio/rgraph.svg?style=for-the-badge" />
+  <a href="https://www.npmjs.com/package/@hydre/rgraph">
+    <img src="https://img.shields.io/npm/v/@hydre/rgraph.svg?logo=npm&style=for-the-badge" />
+  </a>
+  <img src="https://img.shields.io/npm/dw/@hydre/rgraph?logo=npm&style=for-the-badge" />
+  <img src="https://img.shields.io/github/workflow/status/hydreio/rgraph/CI?logo=Github&style=for-the-badge" />
+</p>
 
-[![][discord]][discordlink] [![][twitter]][twitterlink]
+<h3 align=center>A high performance Node.js reactive
+  <a href="https://github.com/RedisGraph/RedisGraph" target="_blank">RedisGraph</a>
+  client. Built on RxJS
+</h3>
 
-[licence]: https://img.shields.io/github/license/HydreIO/rgraph?style=for-the-badge
-[npm]: https://img.shields.io/npm/v/@hydre/rgraph.svg?logo=npm&style=for-the-badge
-[npmlink]: https://www.npmjs.com/package/@hydre/rgraph
-[travis]: https://img.shields.io/travis/com/HydreIO/rgraph.svg?logo=travis&style=for-the-badge
-[travislink]: https://travis-ci.com/HydreIO/rgraph
-[twitter]: https://img.shields.io/badge/follow-us-blue.svg?logo=twitter&style=for-the-badge
-[twitterlink]: https://twitter.com/hydreio
-[discord]: https://img.shields.io/discord/398114799776694272.svg?logo=discord&style=for-the-badge
-[discordlink]: https://discord.gg/bRSpRpD
-[npmdl]: https://img.shields.io/npm/dw/@hydre/rgraph.svg?color=%239C27B0&style=for-the-badge
 
-A high performance Node.js reactive [RedisGraph](https://github.com/RedisGraph/RedisGraph) client. Built on RxJS
+
 
 - Light & Fast
 - Easy to use

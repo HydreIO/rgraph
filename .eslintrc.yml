@@ -52,3 +52,4 @@ rules:
     - error
     - expression
   import/no-named-as-default: 0
+  unicorn/no-fn-reference-in-iterator: 0
