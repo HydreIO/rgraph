@@ -32,9 +32,9 @@ export default client => {
         log.extend('->')(zipped)
 
         const result = await query_graph(zipped)
-        const [header_or_stats, rows, [stats] = header_or_stats] = result
+        const [header_or_stats, rows, stats = header_or_stats] = result
 
-        log_stats(stats)
+        stats.forEach(stat => log_stats(stat))
         return rows ? parser.result_set(result) : undefined
       },
     }
