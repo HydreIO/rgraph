@@ -1,14 +1,17 @@
 {
 	"name": "@hydre/rgraph",
 	"version": "2.0.4",
-	"description": "A reactive javascript driver for Redis Graph",
+	"description": "A high performance Node.js RedisGraph client.",
 	"main": "src/index.js",
 	"type": "module",
 	"exports": {
 		"./operators": "./src/operators"
 	},
 	"scripts": {
-		"lint": "eslint --color src/. && echo -e \"\\033[32mLint success :)\"",
+		"test": "node --harmony-top-level-await test/index.test.js",
+		"coverage": "c8 --check-coverage node --harmony-top-level-await --harmony-private-methods test/index.test.js",
+		"lint": "prettier-eslint $PWD/\"**/*.js\" --print-width 80 --list-different && eslint --color .",
+		"format": "prettier-eslint $PWD/\"**/*.js\" --print-width 80 --write",
 		"postversion": "git push && git push --tags"
 	},
 	"repository": {
@@ -21,7 +24,7 @@
 		"driver"
 	],
 	"author": "Hydre",
-	"license": "MIT",
+	"license": "UNLICENSE",
 	"homepage": "https://hydre.io",
 	"publishConfig": {
 		"access": "public"
@@ -29,30 +32,25 @@
 	"bugs": {
 		"url": "https://github.com/HydreIO/rgraph/issues"
 	},
+	"babel": {
+		"parserOpts": {
+			"allowAwaitOutsideFunction": true
+		}
+	},
 	"dependencies": {
 		"debug": "^4.1.1",
-		"redis": "^3.0.2",
-		"rxjs": "^6.5.5"
+		"ioredis": "^4.17.3"
 	},
 	"devDependencies": {
-		"eslint": "^6.8.0",
-		"eslint-config-adjunct": "^4.2.0",
-		"eslint-config-airbnb-base": "^14.1.0",
-		"eslint-plugin-array-func": "^3.1.5",
-		"eslint-plugin-eslint-comments": "^3.1.2",
-		"eslint-plugin-html": "^6.0.2",
-		"eslint-plugin-import": "^2.20.2",
-		"eslint-plugin-json-format": "^2.0.1",
-		"eslint-plugin-markdown": "^1.0.2",
-		"eslint-plugin-no-constructor-bind": "^2.0.0",
-		"eslint-plugin-no-secrets": "^0.6.8",
-		"eslint-plugin-no-use-extend-native": "^0.5.0",
-		"eslint-plugin-only-error": "^1.0.2",
-		"eslint-plugin-optimize-regex": "^1.2.0",
-		"eslint-plugin-promise": "^4.2.1",
-		"eslint-plugin-simple-import-sort": "^5.0.3",
-		"eslint-plugin-sonarjs": "^0.5.0",
-		"eslint-plugin-switch-case": "^1.1.2",
-		"eslint-plugin-unicorn": "^19.0.1"
+		"@babel/core": "^7.10.4",
+		"@hydre/doubt": "^7.1.0",
+		"@sidy/eslint-config-sidy": "^1.4.13",
+		"babel-eslint": "^11.0.0-beta.2",
+		"c8": "^7.2.1",
+		"dockerode": "^3.2.0",
+		"eslint": "^7.4.0",
+		"eslint-plugin-unicorn": "^20.1.0",
+		"prettier-eslint-cli": "^5.0.0",
+		"tap-spec-emoji": "^6.1.2"
 	}
 }

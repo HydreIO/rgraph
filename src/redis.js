@@ -1,30 +1,51 @@
-import { promisify } from 'util'
+// Provide access to redis graph and cache procedures
+export default client => graph_name => {
+  // following caching optimization as described here https://oss.redislabs.com/redisgraph/client_spec/#procedure-calls
+  const proceed = procedure => {
+    const cache = { keys: [] }
+    const refresh = async () => {
+      const to_yield = procedure.slice(3, -3)
+      const [, missing] = await client.call(
+          'graph.QUERY',
+          graph_name,
+          [
+            `CALL ${ procedure }`,
+            `YIELD ${ to_yield }`,
+            `RETURN ${ to_yield }`,
+            `SKIP ${ cache.keys.length }`,
+          ]
+              .join(' ')
+              .trim(),
+      )
 
-// Provide utility function to access redis graph and cache procedures
-export default client => {
-  const call = promisify(client.send_command).bind(client)
-  return graphId => {
-    const query = async queryArguments => call('graph.QUERY', [graphId, ...queryArguments])
-    // following caching optimization as described here https://oss.redislabs.com/redisgraph/client_spec/#procedure-calls
-    const cacheProcedure = procedure => {
-      const monad = { keys: [] }
-      const fetch = async () => {
-        const toYield = procedure.slice(3, -3)
-        const [, missing] = await query([`CALL ${procedure} YIELD ${toYield} RETURN ${toYield} SKIP ${monad.keys.length}`])
-        if (missing.some(a => a.length > 1)) throw new Error('This version of the driver does not support multi labels on nodes :shrug:')
-        monad.keys = [...monad.keys, ...missing.flat()]
-      }
-      return async index => {
-        if (index >= monad.keys.length) await fetch()
-        return monad.keys[index]
-      }
+      if (missing.some(a => a.length > 1))
+        throw new Error('Multi labels on nodes is not supported :shrug:')
+      return [...cache.keys, ...missing.flat()]
     }
-    return {
-      deleteGraph: () => call('graph.DELETE', [graphId]),
-      queryGraph: queryString => query([queryString, '--compact']),
-      cachedLabels: cacheProcedure('db.labels()'),
-      cachedRelationKeys: cacheProcedure('db.relationshipTypes()'),
-      cachedPropertyKeys: cacheProcedure('db.propertyKeys()'),
+
+    return async index => {
+      if (index >= cache.keys.length) {
+        const most_recent = await refresh()
+
+        // atomic update is okay here as the caller will
+        // always get what he asked for anyway.
+        // we sacrifice performance for consistency
+        // eslint-disable-next-line require-atomic-updates
+        cache.keys = most_recent
+        return most_recent[index]
+      }
+
+      return cache.keys[index]
     }
+  }
+
+  return {
+    query_graph(cypher) {
+      return client.call('graph.QUERY', graph_name, cypher, '--compact')
+    },
+    delete_graph : () => client.call('graph.DELETE', graph_name),
+    find_label   : proceed('db.labels()'),
+    find_relation: proceed('db.relationshipTypes()'),
+    find_property: proceed('db.propertyKeys()'),
   }
 }

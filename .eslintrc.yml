@@ -1,55 +1,16 @@
 env:
   node: true
-  es6: true
+  es2020: true
+plugins:
+  - unicorn
 extends:
-  - eslint:recommended
-  - airbnb-base
-  - adjunct
+  - "@sidy/eslint-config-sidy"
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
+# Nodejs support some experimental ecma features but not eslint
+parser: babel-eslint
 parserOptions:
-  ecmaVersion: 2020
   sourceType: module
-  ecmaFeatures:
-    legacyDecorators: true
-rules:
-  indent: ['error', 2, { SwitchCase: 1 }]
-  linebreak-style:
-    - error
-    - unix
-  quotes: ['warn', 'single', { avoidEscape: true }]
-  semi: 0
-  comma-dangle:
-    - warn
-    - always-multiline
-  default-case: ["error", { "commentPattern": "^skip\\sdefault" }]
-  array-bracket-spacing:
-    - warn
-    - never
-  space-before-function-paren: ['warn', { anonymous: 'never', named: 'never', asyncArrow: 'always' }]
-  func-names: 0
-  no-param-reassign: ['error', { props: false }]
-  import/prefer-default-export: 0
-  no-bitwise: 0
-  no-console: ['error', { allow: ['warn', 'error'] }]
-  lines-between-class-members: ['warn', always, { exceptAfterSingleLine: true }]
-  consistent-return: 0
-  no-plusplus: 0
-  arrow-body-style: 2
-  arrow-parens:
-    - error
-    - as-needed
-  object-curly-newline: ['error', { multiline: true }]
-  object-curly-spacing:
-    - error
-    - always
-  max-len: ['error', { code: 200 }]
-  no-empty: ['error', { allowEmptyCatch: true }]
-  unicorn/no-unreadable-array-destructuring: 0
-  unicorn/filename-case: ['error', { case: 'camelCase' }]
-  func-style:
-    - error
-    - expression
-  import/no-named-as-default: 0
-  unicorn/no-fn-reference-in-iterator: 0
+  configFile: package.json
+  ecmaVersion: 11

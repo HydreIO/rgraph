@@ -1,6 +1,7 @@
 <h1 align=center>@hydre/rgraph</h1>
 <p align=center>
   <img src="https://img.shields.io/github/license/hydreio/rgraph.svg?style=for-the-badge" />
+  <img src="https://img.shields.io/codecov/c/github/hydreio/rgraph/edge?logo=codecov&style=for-the-badge"/>
   <a href="https://www.npmjs.com/package/@hydre/rgraph">
     <img src="https://img.shields.io/npm/v/@hydre/rgraph.svg?logo=npm&style=for-the-badge" />
   </a>
@@ -8,23 +9,27 @@
   <img src="https://img.shields.io/github/workflow/status/hydreio/rgraph/CI?logo=Github&style=for-the-badge" />
 </p>
 
-<h3 align=center>A high performance Node.js reactive
+<h3 align=center>A high performance Node.js
   <a href="https://github.com/RedisGraph/RedisGraph" target="_blank">RedisGraph</a>
-  client. Built on RxJS
+  client.
 </h3>
-
-
-
 
 - Light & Fast
 - Easy to use
-- RxJS observables
+- Functionnal nature
 - Procedures caching
-- Multi graph with partial application
+- Multi graph
+- **BigInt support**
 - Tagged templates literals
+- Es modules
+- Side effects free
+- Loved by ladies
+- On the blockchain
+- Less than 0.1% gluten
+- I'm out off buzzwords
 
-> RedisGraph is not yet production ready, we are fully hyped by future release and will closely follow their development
-> to keep this library up to date and hope to see more and more peoples using RedisGraph 📃
+Rgraph use tagged templates in order to seamlessly serialize any inputs
+while keeping a nice flow which looks like simple interpolation.
 
 ## Install
 
@@ -32,9 +37,9 @@
 npm i @hydre/rgraph
 ```
 
-**This library recently dropped babel and only use ES Modules with configured "type":"module" and "exports", you'll need the latest node version and probably this line**
+> Keep in mind we as boomers only use latest technology, like node >14.5 and top level await.
 ```
-node --harmony --experimental-specifier-resolution=node mylib/index.js
+node --harmony-top-level-await index.js
 ```
 
 ## TL;DR
@@ -42,18 +47,16 @@ node --harmony --experimental-specifier-resolution=node mylib/index.js
 ![](https://i.imgur.com/CHEHoWB.png)
 
 ```js
-import rgraph from '@hydre/rgraph'
-import redis from 'redis'
-import debug from 'debug'
+import Rgraph from '@hydre/rgraph'
+import Redis  from 'ioredis'
+import events from 'events'
 
-const log = debug('graph')
-void async function () {
-  const graph = rgraph(redis.createClient('redis://127.0.0.1:6379/'))('myGraph')
-  const user = { uuid: 'xxx-xx-xxx', name: 'Tony' }
-  log('%O', await graph.run`MERGE (tony:User ${user}) RETURN tony`.toPromise())
-  await graph.delete()
-  log('Graph deleted!')
-}()
+const Graph = Rgraph(new Redis())
+const foo   = Graph('foo')
+
+await events.once(client, 'ready')
+await foo.run`MERGE (tony:User ${ user }) RETURN tony`
+await foo.delete()
 ```
 
 ## Debug
@@ -65,39 +68,27 @@ allow debug logs with the `DEBUG='rgraph*'` env variable
 Get yourself some tea and meat by providing your redis client
 
 ```js
-import rgraph from '@hydre/rgraph'
-import redis from 'redis'
+import Rgraph from '@hydre/rgraph'
+import Redis  from 'ioredis'
 
-const redisClient = redis.createClient(...)
-const useGraph = rgraph(redisClient)
+const redis_client = new Redis()
+const use_graph    = Rgraph(redis_client)
 ```
 
 Wow now you can get as much graphs as you want 💃 !
 go ahead don't be afraid it's redis, not neo4j 🦐
 
 ```js
-const myFirstGraph = useGraph('myFirstGraph')
-const foo = useGraph('anotherGraph')
-const thanos = useGraph('hail-hydra')
-const bar = useGraph('barGraph')
+const my_first_graph = use_graph('myFirstGraph')
+const foo            = use_graph('anotherGraph')
+const thanos         = use_graph('hail-hydra')
+const bar            = use_graph('barGraph')
 ```
 
 Run any [Cypher](https://neo4j.com/docs/cypher-manual/current/) query with a tag template or delete your poor graph
 ```js
-await foo.run`MATCH (n) RETURN n`.toPromise()
+await foo.run`MATCH (n) RETURN n`
 await thanos.delete()
-```
-
-The run function give you an RxJS observable, you can do pretty neat powerful dank stuff
-like querying a graph with the result of another damn easily.. yeah it's real
-
-```js
-foo.run`MATCH path = ()-[]-() RETURN path`
-  // here we map the result to extract the nodes, then we flatMap with another query using the retrieved node
-  .pipe(
-    map(result => result.path.nodes[0]),
-    flatMap(node => bar.run`MATCH (n ${node}) RETURN n`))
-  .subscribe(({ n }))
 ```
 
 Let me show you the result structure for each type, with the visible properties
@@ -143,10 +134,11 @@ import { Internals } from '@hydre/rgraph'
 The library provide some operators to allow usage of cypher feature not yet supported by RedisGraph
 
 ```js
-import { plusEquals } from '@hydre/rgraph/operators'
+import { plus_equals } from '@hydre/rgraph/operators'
 
 const vanillaQuery = `SET user += $user`
-const rgraphQuery = `SET ${plusEquals('user', user)}`
+const rgraphQuery = `SET ${ plus_equals('user', user) }`
+// this will yield an inline query SET user.foo = foo, user.bar = bar
 ```
 
 Welcome to the era of fast graphs..
@@ -154,42 +146,28 @@ Welcome to the era of fast graphs..
 ![](https://forthebadge.com/images/badges/certified-snoop-lion.svg)
 
 ```js
-import { interval } from 'rxjs'
-import { concatMapTo } from 'rxjs/operators'
 import debug from 'debug'
 
 const log = debug('graph')
 
-const result$ = myFirstGraph.run`
-MERGE (foo:User ${user})-[:Knows]->(thanos { name: 'Thanos', age: ${5 + 5}, a: ${true}, b: ${922337203}, c: ${51.000000000016} })
+const result = await myFirstGraph.run`
+MERGE (foo:User ${ user })-[:Knows]->(thanos { name: 'Thanos', age: ${5 + 5}, a: ${true}, b: ${922337203}, c: ${51.000000000016} })
 WITH foo, thanos
 MATCH path = ()-[]-()
 RETURN path`
-
-interval(1000).pipe(concatMapTo(result$), map(({ path: { nodes } }) => `Found ${nodes.length} nodes`)).subscribe(log)
 ```
-![](https://i.imgur.com/s2wfP9y.png)
+![](https://i.imgur.com/XYArfbr.png)
 
 ## FAQ
 
-**Hey calling a function directly with a template literal is a bad practice!!**
-
-In our case it become a tagged template, an extremly powerful feature that apply for this usecase, but feel free to tweet bad stuff about me!
-
 **Can i use nested objects ?**
 
-No, cypher doesn't support them so don't do this
-```js
-`MERGE (:User { foo: 5, bar: ${{ baz: 1 }})`
-```
-because you will get an unpleasant error in your litle terminal billy
-
-**My bigint is becoming a string, why ?**
-
-I'm not sure how to parse them yet
+No, a Graph database use Nodes, not documents. A node is a hash of key value pairs
+and edges (relations) to other nodes
 
 **Commonjs support**
 
-I don't plan to support commonjs as i don't plan to ask tesla to use fuel
+I don't plan to support commonjs as i don't plan to ask tesla to use fuel.
+If you're still using commonjs, it will be better if you shutdown your computer right now
 
 **Edit me**

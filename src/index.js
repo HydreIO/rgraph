@@ -1,39 +1,41 @@
-import Debug from 'debug'
-import rxjs from 'rxjs'
-import operators from 'rxjs/operators'
+import { SYMBOLS, LOG } from './constant.js'
+import Parser from './Parser.js'
+import Serializer from './Serializer.js'
+import redis from './redis.js'
 
-import { SYMBOLS } from './constant'
-import { graphParser, respParser } from './parsing'
-import redis from './redis'
+const { TRANSIENT, ...Internals } = SYMBOLS
 
-const { empty, from, zip } = rxjs
-const { flatMap, map, reduce, switchMap, tap } = operators
-const debug = Debug('rgraph')
-
-const { TRANSIENT, ...OtherSymbols } = SYMBOLS
-
-export const Internals = OtherSymbols
+export { Internals }
 export default client => {
-  const partialGraph = redis(client)
-  return graphId => {
-    if (!graphId) throw new Error('Missing graph ID')
-    const { deleteGraph, queryGraph, ...procedures } = partialGraph(graphId)
-    const parseResult$ = graphParser(procedures)
-    const graphDebug = debug.extend(graphId)
+  const graph = redis(client)
+
+  return graph_name => {
+    if (!graph_name) throw new Error('Missing graph name')
+
+    const { query_graph, delete_graph, ...procedures } = graph(graph_name)
+    const parser = Parser(procedures)
+    const log = LOG.rgraph.extend(graph_name)
+    const log_stats = log.extend('⚡️')
+
     return {
-      delete: deleteGraph,
-      run: (...[raw, ...queryArguments]) => {
-        queryArguments.push(TRANSIENT)
-        return zip(from(raw), from(queryArguments).pipe(map(respParser))).pipe(
-          reduce((accumulator, [a, b]) => [...accumulator, a, b], []),
-          map(a => a.join('')),
-          tap(cypherQuery => graphDebug(cypherQuery)),
-          flatMap(cypherQuery => from(queryGraph(cypherQuery))),
-          // in case there is no return operation, the stats will be result[0] instead of result[2]
-          tap(result => (result[2] || result[0]).forEach(s => graphDebug(s))),
-          // we only parse if there is actually a result
-          switchMap(result => (result[2] ? parseResult$(result) : empty())),
-        )
+      delete: delete_graph,
+      run   : async (raw, ...query_arguments) => {
+        query_arguments.push(TRANSIENT)
+
+        const zipped = raw
+            .map((part, index) => {
+              return `${ part }${ Serializer.value(query_arguments[index]) }`
+            })
+            .join('')
+            .trim()
+
+        log.extend('->')(zipped)
+
+        const result = await query_graph(zipped)
+        const [header_or_stats, rows, [stats] = header_or_stats] = result
+
+        log_stats(stats)
+        return rows ? parser.result_set(result) : undefined
       },
     }
   }
