@@ -1,6 +1,6 @@
 {
 	"name": "@hydre/rgraph",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "A high performance Node.js RedisGraph client.",
 	"main": "src/index.js",
 	"type": "module",
