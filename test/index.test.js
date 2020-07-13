@@ -7,7 +7,7 @@ import Redis from 'ioredis'
 import events from 'events'
 import Rgraph from '../src/index.js'
 import { SYMBOLS } from '../src/constant.js'
-import plus_equals from '../src/operators/plus_equals.js'
+import { plus_equals } from '../src/operators.js'
 
 const through = new PassThrough()
 

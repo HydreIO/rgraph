@@ -5,6 +5,7 @@
 	"main": "src/index.js",
 	"type": "module",
 	"exports": {
+		".": "./src/index.js",
 		"./operators": "./src/operators"
 	},
 	"scripts": {
