@@ -6,7 +6,7 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.js",
-		"./operators": "./src/operators"
+		"./operators": "./src/operators.js"
 	},
 	"scripts": {
 		"test": "node --harmony-top-level-await test/index.test.js",
