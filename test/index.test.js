@@ -87,7 +87,7 @@ try {
 
   doubt['No result is a valid result']({
     because: await graph.run`MATCH (a:Bird) RETURN a`,
-    is     : undefined,
+    is     : {},
   })
 
   doubt['A path can be queried']({
