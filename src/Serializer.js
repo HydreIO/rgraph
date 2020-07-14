@@ -37,12 +37,10 @@ const Serializer = {
   object: object => {
     if (Array.isArray(object)) return `[${ object.map(Serializer.value) }]`
 
-    const { [OPERATOR]: custom_input } = object
-
     // a value may be a custom input like the += operator which
     // is manually supported in this lib and not yet in redisgraph
     // so we return the operator output
-    if (custom_input) return custom_input
+    if (OPERATOR in object) return object[OPERATOR]
 
     const entries = Object.entries(object)
         .map(([key, value]) => `${ key }:${ Serializer.value(value) }`)
