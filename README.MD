@@ -44,7 +44,7 @@ node --harmony-top-level-await index.js
 
 ## TL;DR
 
-![](https://i.imgur.com/huOrZnj.png)
+![](https://i.imgur.com/RYJGWJp.png)
 
 ```js
 import Rgraph from '../src/index.js'
@@ -99,36 +99,39 @@ you also have access to some internals infos like ids and labels etc..
 ```js
 import { Internals } from '@hydre/rgraph'
 
-{
-  // For a scalar
-  ['label in the RETURN statement']: 'value', // the returned value
+[
+  // each object is a sequence of the results
+  {
+    // For a scalar
+    ['label in the RETURN statement']: 'value', // the returned value
 
-  // For a node
-  ['label in the RETURN statement']: {
-    ['each']: ...,
-    ['node']: ...,
-    ['properties']: ...,
-    [Internals.ID]: 0, // the node internal id
-    [Internals.NODE_LABELS]: [], // the node labels
-  },
+    // For a node
+    ['label in the RETURN statement']: {
+      ['each']: ...,
+      ['node']: ...,
+      ['properties']: ...,
+      [Internals.ID]: 0, // the node internal id
+      [Internals.NODE_LABELS]: [], // the node labels
+    },
 
-  // For an edge
-  ['label in the RETURN statement']: {
-    ['each']: ...,
-    ['node']: ...,
-    ['properties']: ...,
-    [Internals.ID]: 0, // the edge internal id
-    [Internals.EDGE_LABEL]: 'label', // the edge label
-    [Internals.SOURCE_NODE_ID]: 0, // the source node id
-    [Internals.DESTINATION_NODE_ID]: 0 // the destination id
-  },
+    // For an edge
+    ['label in the RETURN statement']: {
+      ['each']: ...,
+      ['node']: ...,
+      ['properties']: ...,
+      [Internals.ID]: 0, // the edge internal id
+      [Internals.EDGE_LABEL]: 'label', // the edge label
+      [Internals.SOURCE_NODE_ID]: 0, // the source node id
+      [Internals.DESTINATION_NODE_ID]: 0 // the destination id
+    },
 
-  // For a path
-  ['label in the RETURN statement']: {
-    nodes: [], // an array of nodes (same representation as above but without the return label)
-    edges: [] // an array of edges
+    // For a path
+    ['label in the RETURN statement']: {
+      nodes: [], // an array of nodes (same representation as above but without the return label)
+      edges: [] // an array of edges
+    }
   }
-}
+]
 ```
 
 ## Operators
@@ -151,17 +154,13 @@ Welcome to the era of fast graphs..
 ![](https://forthebadge.com/images/badges/certified-snoop-lion.svg)
 
 ```js
-import debug from 'debug'
-
-const log = debug('graph')
-
-const result = await myFirstGraph.run`
+await myFirstGraph.run`
 MERGE (foo:User ${ user })-[:Knows]->(thanos { name: 'Thanos', age: ${5 + 5}, a: ${true}, b: ${922337203}, c: ${51.000000000016} })
 WITH foo, thanos
 MATCH path = ()-[]-()
 RETURN path`
 ```
-![](https://i.imgur.com/XYArfbr.png)
+![](https://i.imgur.com/pfa0ULc.png)
 
 ## FAQ
 

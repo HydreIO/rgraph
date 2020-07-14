@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable max-len */
 import Doubt from '@hydre/doubt'
 import reporter from 'tap-spec-emoji'
@@ -58,9 +59,9 @@ try {
       user,
   ) }`
 
-  const {
+  const [{
     paul,
-  } = await graph.run`MATCH (paul:User) WHERE paul.name CONTAINS 'Pau' RETURN paul`
+  }] = await graph.run`MATCH (paul:User) WHERE paul.name CONTAINS 'Pau' RETURN paul`
 
   doubt['A node can be created']({
     because: paul.name,
@@ -71,7 +72,7 @@ try {
     because: await graph.run`
       UNWIND ${ [1, 2] } AS num
       MERGE (n)-[r:A { t: num}]-(b)
-      RETURN collect(n) as debussy, r`.then(({ debussy }) => debussy),
+      RETURN collect(n) as debussy, r`.then(([{ debussy }]) => debussy),
     is: [
       {
         [SYMBOLS.ID]         : 1,
@@ -108,37 +109,158 @@ try {
     WITH foo, thanos
     MATCH path = ()-[]-()
     RETURN path`,
-    is: {
-      path: {
-        nodes: [
-          {
-            name                 : 'sceat',
-            [SYMBOLS.ID]         : 0,
-            [SYMBOLS.NODE_LABELS]: ['User'],
-          },
-          {
-            name                 : 'Thanos',
-            age                  : 10,
-            a                    : true,
-            b                    : 922337203,
-            c                    : 51.000000000016,
-            [SYMBOLS.ID]         : 1,
-            [SYMBOLS.NODE_LABELS]: [],
-          },
-        ],
-        edges: [
-          {
-            [SYMBOLS.ID]                 : 0,
-            [SYMBOLS.EDGE_LABEL]         : 'Knows',
-            [SYMBOLS.SOURCE_NODE_ID]     : 0,
-            [SYMBOLS.DESTINATION_NODE_ID]: 1,
-          },
-        ],
+    is: [
+      {
+        path: {
+          nodes: [
+            {
+              name                 : 'sceat',
+              [SYMBOLS.ID]         : 0,
+              [SYMBOLS.NODE_LABELS]: ['User'],
+            },
+            {
+              name                 : 'Thanos',
+              age                  : 10,
+              a                    : true,
+              b                    : 922337203,
+              c                    : 51.000000000016,
+              [SYMBOLS.ID]         : 5,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+          ],
+          edges: [
+            {
+              [SYMBOLS.ID]                 : 2,
+              [SYMBOLS.EDGE_LABEL]         : 'Knows',
+              [SYMBOLS.SOURCE_NODE_ID]     : 0,
+              [SYMBOLS.DESTINATION_NODE_ID]: 5,
+            },
+          ],
+        },
       },
-    },
+      {
+        path: {
+          nodes: [
+            {
+              [SYMBOLS.ID]         : 1,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+            {
+              [SYMBOLS.ID]         : 2,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+          ],
+          edges: [
+            {
+              t                            : 2,
+              [SYMBOLS.ID]                 : 0,
+              [SYMBOLS.EDGE_LABEL]         : 'A',
+              [SYMBOLS.SOURCE_NODE_ID]     : 1,
+              [SYMBOLS.DESTINATION_NODE_ID]: 2,
+            },
+          ],
+        },
+      },
+      {
+        path: {
+          nodes: [
+            {
+              [SYMBOLS.ID]         : 2,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+            {
+              [SYMBOLS.ID]         : 1,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+          ],
+          edges: [
+            {
+              t                            : 2,
+              [SYMBOLS.ID]                 : 0,
+              [SYMBOLS.EDGE_LABEL]         : 'A',
+              [SYMBOLS.SOURCE_NODE_ID]     : 1,
+              [SYMBOLS.DESTINATION_NODE_ID]: 2,
+            },
+          ],
+        },
+      },
+      {
+        path: {
+          nodes: [
+            {
+              [SYMBOLS.ID]         : 3,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+            {
+              [SYMBOLS.ID]         : 4,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+          ],
+          edges: [
+            {
+              t                            : 1,
+              [SYMBOLS.ID]                 : 1,
+              [SYMBOLS.EDGE_LABEL]         : 'A',
+              [SYMBOLS.SOURCE_NODE_ID]     : 3,
+              [SYMBOLS.DESTINATION_NODE_ID]: 4,
+            },
+          ],
+        },
+      },
+      {
+        path: {
+          nodes: [
+            {
+              [SYMBOLS.ID]         : 4,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+            {
+              [SYMBOLS.ID]         : 3,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+          ],
+          edges: [
+            {
+              t                            : 1,
+              [SYMBOLS.ID]                 : 1,
+              [SYMBOLS.EDGE_LABEL]         : 'A',
+              [SYMBOLS.SOURCE_NODE_ID]     : 3,
+              [SYMBOLS.DESTINATION_NODE_ID]: 4,
+            },
+          ],
+        },
+      },
+      {
+        path: {
+          nodes: [
+            {
+              name                 : 'Thanos',
+              age                  : 10,
+              a                    : true,
+              b                    : 922337203,
+              c                    : 51.000000000016,
+              [SYMBOLS.ID]         : 5,
+              [SYMBOLS.NODE_LABELS]: [],
+            },
+            {
+              name                 : 'sceat',
+              [SYMBOLS.ID]         : 0,
+              [SYMBOLS.NODE_LABELS]: ['User'],
+            },
+          ],
+          edges: [
+            {
+              [SYMBOLS.ID]                 : 2,
+              [SYMBOLS.EDGE_LABEL]         : 'Knows',
+              [SYMBOLS.SOURCE_NODE_ID]     : 0,
+              [SYMBOLS.DESTINATION_NODE_ID]: 5,
+            },
+          ],
+        },
+      },
+    ]
+    ,
   })
-
-  // tests
 
   await client.quit()
 } finally {

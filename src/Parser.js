@@ -90,39 +90,49 @@ export default ({ find_label, find_relation, find_property }) => {
         edges: await Parser.row(edges),
       }
     },
-    async result_set([header, [rawCell]]) {
-      if (!header || !rawCell) {
+    async result_set([header, raw_cells = []]) {
+      if (!header || !raw_cells.length) {
         LOG.parser('no result found')
         return {}
       }
 
       const results = []
-      const zipped = header.map((x, index) => [x, rawCell[index]])
+      const map_header = raw_cell => header
+          .map((x, index) => [x, raw_cell[index]])
+      const sequences = raw_cells.map(map_header)
 
-      for (const [[cell_type, label], cell] of zipped) {
-        switch (cell_type) {
-          case RESULT_TYPE.NODE:
-            results.push([label, await Parser.node(cell)])
-            break
+      // and also here we sequencially parse results
+      // instead of concurrently. Again to avoid possible procedure spam
+      for (const sequence of sequences) {
+        const sub_result = []
 
-          case RESULT_TYPE.RELATION:
-            results.push([label, await Parser.edge(cell)])
-            break
+        for (const [[cell_type, label], cell] of sequence) {
+          switch (cell_type) {
+            case RESULT_TYPE.NODE:
+              sub_result.push([label, await Parser.node(cell)])
+              break
 
-          case RESULT_TYPE.SCALAR:
-            results.push([label, await Parser.scalar(cell)])
-            break
+            case RESULT_TYPE.RELATION:
+              sub_result.push([label, await Parser.edge(cell)])
+              break
 
-          /* c8 ignore next 4 */
-          // hardly testable
-          case RESULT_TYPE.UNKNOWN:
-            throw new Error(`Cell of type ${ cell_type } is unkown`)
+            case RESULT_TYPE.SCALAR:
+              sub_result.push([label, await Parser.scalar(cell)])
+              break
 
-          // no default
+            /* c8 ignore next 4 */
+            // hardly testable
+            case RESULT_TYPE.UNKNOWN:
+              throw new Error(`Cell of type ${ cell_type } is unkown`)
+
+            // no default
+          }
         }
+
+        results.push(Object.fromEntries(sub_result))
       }
 
-      return Object.fromEntries(results)
+      return results
     },
   }
 
