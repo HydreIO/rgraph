@@ -97,8 +97,8 @@ export default ({ find_label, find_relation, find_property }) => {
       }
 
       const results = []
-      const map_header = raw_cell => header
-          .map((x, index) => [x, raw_cell[index]])
+      const map_header = raw_cell =>
+        header.map((x, index) => [x, raw_cell[index]])
       const sequences = raw_cells.map(map_header)
 
       // and also here we sequencially parse results

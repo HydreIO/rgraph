@@ -59,9 +59,9 @@ try {
       user,
   ) }`
 
-  const [{
-    paul,
-  }] = await graph.run`MATCH (paul:User) WHERE paul.name CONTAINS 'Pau' RETURN paul`
+  const [
+    { paul },
+  ] = await graph.run`MATCH (paul:User) WHERE paul.name CONTAINS 'Pau' RETURN paul`
 
   doubt['A node can be created']({
     because: paul.name,
@@ -258,8 +258,7 @@ try {
           ],
         },
       },
-    ]
-    ,
+    ],
   })
 
   await client.quit()
