@@ -2,6 +2,7 @@ import { SYMBOLS, LOG } from './constant.js'
 import Parser from './Parser.js'
 import Serializer from './Serializer.js'
 import redis from './redis.js'
+import util from 'util'
 
 const { TRANSIENT, ...Internals } = SYMBOLS
 
@@ -29,13 +30,28 @@ export default client => {
             .join('')
             .trim()
 
-        log.extend('->')(zipped)
+        log.extend('🧊')(zipped)
 
-        const result = await query_graph(zipped)
-        const [header_or_stats, rows, stats = header_or_stats] = result
+        try {
+          const result = await query_graph(zipped)
+          const [header_or_stats, rows, stats = header_or_stats] = result
 
-        stats.forEach(stat => log_stats(stat))
-        return rows ? parser.result_set(result) : undefined
+          stats.forEach(stat => log_stats(stat))
+          if (rows) {
+            const parsed_result = await parser.result_set(result)
+
+            log.extend('📦')(util.inspect(parsed_result, {
+              depth : Infinity,
+              colors: true,
+            }))
+            return parsed_result
+          }
+
+          return undefined
+        } catch (error) {
+          log.extend('error')(error)
+          throw error
+        }
       },
     }
   }

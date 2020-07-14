@@ -7,3 +7,7 @@ export const plus_equals = (label, object) => ({
       .map(([key, value]) => `${ label }.${ key }=${ Serializer.value(value) }`)
       .join(),
 })
+
+export const raw = statement => ({
+  [SYMBOLS.OPERATOR]: statement,
+})

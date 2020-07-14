@@ -136,11 +136,14 @@ import { Internals } from '@hydre/rgraph'
 The library provide some operators to allow usage of cypher feature not yet supported by RedisGraph
 
 ```js
-import { plus_equals } from '@hydre/rgraph/operators'
+import { plus_equals, raw } from '@hydre/rgraph/operators'
 
 const vanillaQuery = `SET user += $user`
 const rgraphQuery = `SET ${ plus_equals('user', user) }`
 // this will yield an inline query SET user.foo = foo, user.bar = bar
+
+const maybe = false ? 'AND 1 = 2' : ''
+const conditionnal = `WHERE 1 = 1 ${ raw(maybe) }`
 ```
 
 Welcome to the era of fast graphs..

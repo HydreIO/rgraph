@@ -7,7 +7,7 @@ import Redis from 'ioredis'
 import events from 'events'
 import Rgraph from '../src/index.js'
 import { SYMBOLS } from '../src/constant.js'
-import { plus_equals } from '../src/operators.js'
+import { plus_equals, raw } from '../src/operators.js'
 
 const through = new PassThrough()
 
@@ -24,7 +24,7 @@ const container = await docker.createContainer({
 const doubt = Doubt({
   stdout: through,
   title : 'Rgraph',
-  calls : 5,
+  calls : 6,
 })
 
 try {
@@ -89,6 +89,15 @@ try {
     because: await graph.run`MATCH (a:Bird) RETURN a`,
     is     : {},
   })
+
+  try {
+    await graph.run`${ raw('MATCH (a:Birds) RETURN collect(b)') }`
+  } catch (error) {
+    doubt['Invalid cypher correctly throw']({
+      because: error.message,
+      is     : 'b not defined',
+    })
+  }
 
   doubt['A path can be queried']({
     because: await graph.run`
