@@ -93,7 +93,7 @@ export default ({ find_label, find_relation, find_property }) => {
     async result_set([header, raw_cells = []]) {
       if (!header || !raw_cells.length) {
         LOG.parser('no result found')
-        return {}
+        return []
       }
 
       const results = []
