@@ -36,6 +36,7 @@ export default client => {
           const result = await query_graph(zipped)
           const [header_or_stats, rows, stats = header_or_stats] = result
 
+          if (stats instanceof Error) throw stats
           stats.forEach(stat => log_stats(stat))
           if (rows) {
             const parsed_result = await parser.result_set(result)
