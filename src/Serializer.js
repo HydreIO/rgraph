@@ -20,7 +20,7 @@ const Serializer = {
         return value
 
       case 'string':
-        return `'${ value }'`
+        return `'${ value.replace('\'', '\\$&') }'`
 
       // eslint-disable-next-line no-use-before-define
       case 'object':
