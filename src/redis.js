@@ -3,7 +3,7 @@ export default client => graph_name => {
   // following caching optimization as described here https://oss.redislabs.com/redisgraph/client_spec/#procedure-calls
   const proceed = procedure => {
     const cache = { keys: [] }
-    const refresh = async () => {
+    const refresh = async current_keys => {
       const to_yield = procedure.slice(3, -3)
       const [, missing] = await client.call(
           'graph.QUERY',
@@ -20,16 +20,15 @@ export default client => graph_name => {
 
       if (missing.some(a => a.length > 1))
         throw new Error('Multi labels on nodes is not supported :shrug:')
-      return [...cache.keys, ...missing.flat()]
+      return [...current_keys, ...missing.flat()]
     }
 
     return async index => {
       if (index >= cache.keys.length) {
-        const most_recent = await refresh()
+        const most_recent = await refresh(cache.keys)
 
-        // atomic update is okay here as the caller will
-        // always get what he asked for anyway.
-        // we sacrifice performance for consistency
+        // this is atomic update is okay as we gave a copy of the keys
+        // to the refresh function in order to avoid duplication
         // eslint-disable-next-line require-atomic-updates
         cache.keys = most_recent
         return most_recent[index]

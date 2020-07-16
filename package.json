@@ -44,7 +44,7 @@
 		"ioredis": "^4.17.3"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.10.4",
+		"@babel/core": "^7.10.5",
 		"@hydre/doubt": "^7.1.0",
 		"@sidy/eslint-config-sidy": "^1.4.13",
 		"babel-eslint": "^11.0.0-beta.2",
