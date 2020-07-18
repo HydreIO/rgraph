@@ -43,7 +43,7 @@ export default client => graph_name => {
       const normalized = cypher
           .split('\n')
           .map(x => x.trim())
-          .join(' ')
+          .join('\n')
 
       return client.call('graph.QUERY', graph_name, normalized, '--compact')
     },
