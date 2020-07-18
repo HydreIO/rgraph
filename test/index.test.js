@@ -50,6 +50,9 @@ try {
     age_small  : 84654262161621362n,
     type       : undefined,
     wicked     : true,
+    // eslint-disable-next-line unicorn/no-null
+    boomer     : null,
+    zoomer     : false,
     drugs_count: 5,
     hey        : () => 'listen',
   }
