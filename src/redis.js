@@ -40,7 +40,12 @@ export default client => graph_name => {
 
   return {
     query_graph(cypher) {
-      return client.call('graph.QUERY', graph_name, cypher, '--compact')
+      const normalized = cypher
+          .split('\n')
+          .map(x => x.trim())
+          .join(' ')
+
+      return client.call('graph.QUERY', graph_name, normalized, '--compact')
     },
     delete_graph : () => client.call('graph.DELETE', graph_name),
     find_label   : proceed('db.labels()'),

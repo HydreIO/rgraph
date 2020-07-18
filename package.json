@@ -51,7 +51,7 @@
 		"c8": "^7.2.1",
 		"dockerode": "^3.2.0",
 		"eslint": "^7.4.0",
-		"eslint-plugin-unicorn": "^20.1.0",
+		"eslint-plugin-unicorn": "^21.0.0",
 		"prettier-eslint-cli": "^5.0.0",
 		"tap-spec-emoji": "^6.1.2"
 	}
