@@ -5,11 +5,6 @@ export default ({ find_label, find_relation, find_property }) => {
     // eslint-disable-next-line complexity, consistent-return
     async scalar([type, value]) {
       switch (type) {
-        case DATA_TYPE.UNKNOWN:
-
-        case DATA_TYPE.NULL:
-          return undefined
-
         case DATA_TYPE.STRING:
           return value
 
@@ -43,6 +38,8 @@ export default ({ find_label, find_relation, find_property }) => {
 
         // no default
       }
+
+      return undefined
     },
     async property([key, type, value]) {
       return [await find_property(key), await Parser.scalar([type, value])]
