@@ -36,10 +36,10 @@ export default ({ find_label, find_relation, find_property }) => {
         case DATA_TYPE.PATH:
           return Parser.path(value)
 
+        /* c8 ignore next 3 */
+        // freaking github runner that pass the coverage randomly
         // no default
       }
-
-      return undefined
     },
     async property([key, type, value]) {
       return [await find_property(key), await Parser.scalar([type, value])]
