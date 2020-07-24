@@ -37,7 +37,7 @@ while keeping a nice flow which looks like simple interpolation.
 npm i @hydre/rgraph
 ```
 
-> Keep in mind we as boomers only use latest technology, like node >14.5 and top level await.
+> Keep in mind we as zoomers only use latest technology, like node >14.5 and top level await.
 ```
 node --harmony-top-level-await index.js
 ```
