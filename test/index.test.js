@@ -43,7 +43,7 @@ try {
   await events.once(client, 'ready')
 
   const Graph = Rgraph(client)
-  const graph = Graph('foo')
+  const graph = Graph('Rgraph_test')
   const user = {
     name       : 'Paul',
     age        : 8442424654262161621362n,
@@ -263,7 +263,7 @@ try {
       },
     ],
   })
-
+  await graph.delete()
   await client.quit()
 } finally {
   await container.stop()
