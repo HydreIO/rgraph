@@ -162,6 +162,25 @@ RETURN path`
 ```
 ![](https://i.imgur.com/pfa0ULc.png)
 
+## Comments
+
+> new in 4.2.0
+
+When writting long queries you might want to help your team to understand it
+by adding comments. Every _trimmed_ new line starting with `//` will be ignored
+
+```js
+await graph.run/* cypher */`
+  MATCH (u:User)
+  WHERE (
+    u.name = 'pepeg' AND
+    u.age > 30
+  )
+  // hey i'm a comment
+  RETURN u AS goog_pepeg
+`
+```
+
 ## FAQ
 
 **Can i use nested objects ?**
