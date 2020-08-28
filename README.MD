@@ -47,7 +47,7 @@ node --harmony-top-level-await index.js
 ![](https://i.imgur.com/RYJGWJp.png)
 
 ```js
-import Rgraph from '../src/index.js'
+import Rgraph from '@hydre/rgraph'
 import Redis  from 'ioredis'
 import Events from 'events'
 
