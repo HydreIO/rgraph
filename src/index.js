@@ -46,7 +46,7 @@ export default client => {
                 ) => {
                   return {
                     keys: [...result_keys, ...next_keys],
-                    raw : `${ result_raw }${ next_raw }`.trim(),
+                    raw : `${ result_raw }${ next_raw }`,
                   }
                 },
                 {
@@ -55,7 +55,12 @@ export default client => {
                 },
             )
         const { keys, raw } = zipped
-        const query = `CYPHER ${ keys.join(' ').trim() } ${ raw }`
+        const cypher = raw
+            .split('\n')
+            .map(x => x.trim())
+            .filter(x => !x.startsWith('//'))
+            .join(' ')
+        const query = `CYPHER ${ keys.join(' ').trim() } ${ cypher }`
 
         log.extend('🧊')(query)
 
