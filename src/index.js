@@ -24,7 +24,7 @@ export default client => {
               const key = `a_${ index }`
               const parameter = query_arguments[index]
 
-              if (!parameter) {
+              if (parameter === undefined || parameter === null) {
                 return {
                   keys: [],
                   raw : part,
