@@ -62,9 +62,7 @@ try {
       user,
   ) }`
 
-  const [
-    { paul },
-  ] = await graph.run/* cypher */`
+  const [{ paul }] = await graph.run/* cypher */`
   // this is a comment
   MATCH (paul:User) WHERE paul.name CONTAINS 'Pau' RETURN paul`
 
