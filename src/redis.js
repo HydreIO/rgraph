@@ -41,7 +41,7 @@ export default client => graph_name => {
       if (index >= cache.get(procedure).length) {
         const most_recent = await refresh(cache.get(procedure))
 
-        // this is atomic update is okay as we gave a copy of the keys
+        // this atomic update is okay as we gave a copy of the keys
         // to the refresh function in order to avoid duplication
         // eslint-disable-next-line require-atomic-updates
         cache.set(procedure, most_recent)
