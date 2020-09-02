@@ -23,19 +23,12 @@ export default client => {
             .map((part, index) => {
               const key = `a_${ index }`
               const parameter = query_arguments[index]
-
-              if (parameter === undefined || parameter === null) {
-                return {
-                  keys: [],
-                  raw : part,
-                }
-              }
-
               const { keys = [], raw = '' } = Serializer.value(parameter, key)
+              const has_parameter = index < query_arguments.length
 
               return {
-                keys: part ? keys : [],
-                raw : `${ part }${ raw }`,
+                keys: has_parameter ? keys : [],
+                raw : has_parameter ? `${ part }${ raw }` : part,
               }
             })
         // eslint-disable-next-line unicorn/no-reduce

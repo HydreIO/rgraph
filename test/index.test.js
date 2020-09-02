@@ -139,7 +139,7 @@ try {
     MERGE (foo:User ${ {
     name: 'sceat',
   } })-[:Knows]->(thanos { name: 'Thanos', age: ${ 5
-      + 5 }, a: ${ true }, b: ${ 922337203 }, c: ${ 51.000000000016 }, d: ${ 0 } })
+      + 5 }, a: ${ true }, b: ${ 922337203 }, c: ${ 51.000000000016 }, d: ${ 0 }, e: ${ undefined } })
     WITH foo, thanos
     MATCH path = ()-[]-()
     RETURN path`,
@@ -159,6 +159,7 @@ try {
               b                    : 922337203,
               c                    : 51.000000000016,
               d                    : 0,
+              e                    : undefined,
               [SYMBOLS.ID]         : 5,
               [SYMBOLS.NODE_LABELS]: [],
             },
@@ -275,6 +276,7 @@ try {
               b                    : 922337203,
               c                    : 51.000000000016,
               d                    : 0,
+              e                    : undefined,
               [SYMBOLS.ID]         : 5,
               [SYMBOLS.NODE_LABELS]: [],
             },
