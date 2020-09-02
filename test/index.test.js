@@ -25,7 +25,7 @@ const container = await docker.createContainer({
 const doubt = Doubt({
   stdout: through,
   title : 'Rgraph',
-  calls : 6,
+  calls : 9,
 })
 
 try {
@@ -70,6 +70,36 @@ try {
     because: paul.name,
     is     : 'Paul',
   })
+
+  try {
+    await graph.run`CREATE (${ { a: { b: 1 } } })`
+  } catch (error) {
+    doubt['Nesting objects throws an error']({
+      because: error.message,
+      is     :
+        '{ b: 1 } is a nested object and thus not currently supported in redisgraph',
+    })
+  }
+
+  try {
+    await graph.run`CREATE (a) SET a.hoes = ${ [{ a: 1 }] }`
+  } catch (error) {
+    doubt['Nesting objects in an array throws an error']({
+      because: error.message,
+      is     :
+        '[ { a: 1 } ] is a nested object and thus not currently supported in redisgraph',
+    })
+  }
+
+  try {
+    await graph.run`CREATE (a) ${ plus_equals('a', { a: { b: 3 } }) }`
+  } catch (error) {
+    doubt['Nesting objects in an operator also throws an error']({
+      because: error.message,
+      is     :
+        '{ b: 3 } is a nested object and thus not currently supported in redisgraph',
+    })
+  }
 
   doubt['Weird data types are covered']({
     because: await graph.run`
