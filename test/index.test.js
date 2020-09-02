@@ -64,7 +64,9 @@ try {
 
   const [
     { paul },
-  ] = await graph.run`MATCH (paul:User) WHERE paul.name CONTAINS 'Pau' RETURN paul`
+  ] = await graph.run/* cypher */`
+  // this is a comment
+  MATCH (paul:User) WHERE paul.name CONTAINS 'Pau' RETURN paul`
 
   doubt['A node can be created']({
     because: paul.name,
@@ -102,7 +104,8 @@ try {
   }
 
   doubt['Weird data types are covered']({
-    because: await graph.run`
+    because: await graph.run/* cypher */`
+      // this is a comment
       UNWIND ${ [1, 2] } AS num
       MERGE (n)-[r:A { t: num}]-(b)
       RETURN collect(n) as debussy, r`.then(([{ debussy }]) => debussy),
