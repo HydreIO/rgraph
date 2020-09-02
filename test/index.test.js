@@ -273,6 +273,7 @@ try {
               a                    : true,
               b                    : 922337203,
               c                    : 51.000000000016,
+              d                    : 0,
               [SYMBOLS.ID]         : 5,
               [SYMBOLS.NODE_LABELS]: [],
             },
