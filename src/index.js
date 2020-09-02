@@ -61,8 +61,22 @@ export default client => {
             .filter(x => !x.startsWith('//'))
             .join(' ')
         const query = `CYPHER ${ keys.join(' ').trim() } ${ cypher }`
+        const ice_log = log.extend('📝')
+        const parameter_log = log.extend('⚙️')
+        const comment_log = ice_log.extend('💡')
 
-        log.extend('🧊')(query)
+        parameter_log(
+            ` CYPHER %O`,
+            Object.fromEntries(keys.flat().map(x => x.split('='))),
+        )
+        raw
+            .split('\n')
+            .map(x => x.trim())
+            .forEach(x => {
+              if (x.startsWith('//'))
+                comment_log('%O', x.slice(x.indexOf('//') + 3))
+              else ice_log(x)
+            })
 
         try {
           const result = await query_graph(query)

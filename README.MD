@@ -45,7 +45,7 @@ node --harmony-top-level-await index.js
 
 ## TL;DR
 
-![](https://i.imgur.com/GqbZ338.png)
+![](https://i.imgur.com/JiG19RH.png)
 
 ```js
 import Rgraph from '@hydre/rgraph'
@@ -161,7 +161,7 @@ WITH foo, thanos
 MATCH path = ()-[]-()
 RETURN path`
 ```
-![](https://i.imgur.com/UmfOszr.png)
+![](https://i.imgur.com/oTrFy25.png)
 
 ## Comments
 
