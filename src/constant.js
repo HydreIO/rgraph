@@ -23,7 +23,6 @@ export const DATA_TYPE = {
 }
 
 export const SYMBOLS = {
-  TRANSIENT          : Symbol('transient'),
   ID                 : Symbol('id'),
   NODE_LABELS        : Symbol('node labels'),
   EDGE_LABEL         : Symbol('edge label'),
