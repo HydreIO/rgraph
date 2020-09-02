@@ -18,6 +18,7 @@
 - Easy to use
 - Functionnal nature
 - Procedures caching
+- Parameterized queries _(since `4.3.0`)_
 - Multi graph
 - **BigInt support**
 - Tagged templates literals
@@ -44,7 +45,7 @@ node --harmony-top-level-await index.js
 
 ## TL;DR
 
-![](https://i.imgur.com/RYJGWJp.png)
+![](https://i.imgur.com/GqbZ338.png)
 
 ```js
 import Rgraph from '@hydre/rgraph'
@@ -154,13 +155,13 @@ Welcome to the era of fast graphs..
 ![](https://forthebadge.com/images/badges/certified-snoop-lion.svg)
 
 ```js
-await myFirstGraph.run`
-MERGE (foo:User ${ user })-[:Knows]->(thanos { name: 'Thanos', age: ${5 + 5}, a: ${true}, b: ${922337203}, c: ${51.000000000016} })
+await myFirstGraph.run/* cypher */`
+MERGE (foo:User ${ user })-[:Knows]->(thanos { name: 'Thanos', age: ${5 + 5}, a: ${true}, c: ${51.000000000016} })
 WITH foo, thanos
 MATCH path = ()-[]-()
 RETURN path`
 ```
-![](https://i.imgur.com/pfa0ULc.png)
+![](https://i.imgur.com/UmfOszr.png)
 
 ## Comments
 
