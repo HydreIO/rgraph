@@ -85,11 +85,10 @@ export default client => {
           if (rows) {
             const parsed_result = await parser.result_set(result)
 
-            log.extend(`📦 [${ query_log_counter }]`)(util
-                .inspect(parsed_result, {
-                  depth : Infinity,
-                  colors: true,
-                }))
+            log.extend(`📦 [${ query_log_counter }]`)(util.inspect(parsed_result, {
+              depth : Infinity,
+              colors: true,
+            }))
             return parsed_result
           }
 
