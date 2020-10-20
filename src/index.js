@@ -4,6 +4,9 @@ import Serializer from './Serializer.js'
 import redis from './redis.js'
 import util from 'util'
 
+// used to group queries while logging
+let query_log_counter = 0
+
 export { Internals }
 export default client => {
   const graph = redis(client)
@@ -14,11 +17,12 @@ export default client => {
     const { query_graph, delete_graph, ...procedures } = graph(graph_name)
     const parser = Parser(procedures)
     const log = LOG.rgraph.extend(graph_name)
-    const log_stats = log.extend('⚡️')
 
     return {
       delete: delete_graph,
       run   : async (query_string, ...query_arguments) => {
+        query_log_counter++
+
         const zipped = query_string
             .map((part, index) => {
               const key = `a_${ index }`
@@ -54,9 +58,10 @@ export default client => {
             .filter(x => !x.startsWith('//'))
             .join(' ')
         const query = `CYPHER ${ keys.join(' ').trim() } ${ cypher }`
-        const ice_log = log.extend('📝')
-        const parameter_log = log.extend('⚙️')
-        const comment_log = ice_log.extend('💡')
+        const ice_log = log.extend(`📝 [${ query_log_counter }]`)
+        const parameter_log = log.extend(`⚙️  [${ query_log_counter }]`)
+        const comment_log = ice_log.extend(`💡 [${ query_log_counter }]`)
+        const log_stats = log.extend(`⚡️ [${ query_log_counter }]`)
 
         parameter_log(
             ` CYPHER %O`,
@@ -80,16 +85,17 @@ export default client => {
           if (rows) {
             const parsed_result = await parser.result_set(result)
 
-            log.extend('📦')(util.inspect(parsed_result, {
-              depth : Infinity,
-              colors: true,
-            }))
+            log.extend(`📦 [${ query_log_counter }]`)(util
+                .inspect(parsed_result, {
+                  depth : Infinity,
+                  colors: true,
+                }))
             return parsed_result
           }
 
           return undefined
         } catch (error) {
-          log.extend('error')(error)
+          log.extend(`☠️  [${ query_log_counter }]`)('\u001B[31m%O', error)
           throw error
         }
       },
