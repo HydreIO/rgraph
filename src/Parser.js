@@ -1,4 +1,4 @@
-import { DATA_TYPE, RESULT_TYPE, SYMBOLS, LOG } from './constant.js'
+import { DATA_TYPE, SYMBOLS, LOG } from './constant.js'
 
 export default ({ find_label, find_relation, find_property }) => {
   const Parser = {

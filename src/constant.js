@@ -2,12 +2,13 @@ import Debug from 'debug'
 
 const debug = Debug('rgraph')
 
-export const RESULT_TYPE = {
-  UNKNOWN : 0,
-  SCALAR  : 1,
-  NODE    : 2,
-  RELATION: 3,
-}
+// 👇 this should be verified according to https://github.com/RedisGraph/RedisGraph/issues/1387
+// export const RESULT_TYPE = {
+//   UNKNOWN : 0,
+//   SCALAR  : 1,
+//   NODE    : 2,
+//   RELATION: 3,
+// }
 
 export const DATA_TYPE = {
   UNKNOWN: 0,
