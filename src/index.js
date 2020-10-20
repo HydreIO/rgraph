@@ -84,11 +84,12 @@ export default client => {
           stats.forEach(stat => log_stats(stat))
           if (rows) {
             const parsed_result = await parser.result_set(result)
-
-            log.extend(`📦 [${ query_log_counter }]`)(util.inspect(parsed_result, {
+            const inspected = util.inspect(parsed_result, {
               depth : Infinity,
               colors: true,
-            }))
+            })
+
+            log.extend(`📦 [${ query_log_counter }]`)(inspected)
             return parsed_result
           }
 
