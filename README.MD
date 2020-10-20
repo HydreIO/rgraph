@@ -14,6 +14,8 @@
   client.
 </h3>
 
+> **Redisgraph `>2.10`**
+
 - Light & Fast
 - Easy to use
 - Functionnal nature
