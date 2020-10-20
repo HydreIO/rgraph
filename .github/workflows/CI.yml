@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.13
-      - run: docker pull redislabs/redisgraph
+      - run: docker pull redislabs/redisgraph:edge
       - run: npm i
       - run: npm run lint
       - run: npm test
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.13
-      - run: docker pull redislabs/redisgraph
+      - run: docker pull redislabs/redisgraph:edge
       - run: npm i
       - run: npm run coverage
       - uses: codecov/codecov-action@v1

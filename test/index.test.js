@@ -16,7 +16,7 @@ pipeline(through, reporter(), process.stdout, () => {})
 
 const docker = new Docker()
 const container = await docker.createContainer({
-  Image       : 'redislabs/redisgraph',
+  Image       : 'redislabs/redisgraph:edge',
   AttachStdout: false,
   HostConfig  : {
     NetworkMode: 'host',
@@ -25,7 +25,7 @@ const container = await docker.createContainer({
 const doubt = Doubt({
   stdout: through,
   title : 'Rgraph',
-  calls : 9,
+  calls : 10,
 })
 
 try {
@@ -57,10 +57,11 @@ try {
     hey        : () => 'listen',
   }
 
-  await graph.run`CREATE (a:User {origin: 'america'}) SET ${ plus_equals(
+  await graph.run/* cypher */`CREATE (a:User {origin: 'america'}) SET ${ plus_equals(
       'a',
       user,
   ) }`
+  await graph.run/* cypher */`CREATE ()-[:FOO_BAR]->()`
 
   const [{ paul }] = await graph.run/* cypher */`
   // this is a comment
@@ -71,8 +72,27 @@ try {
     is     : 'Paul',
   })
 
+  const [{ edge } = {}] = await graph.run/* cypher */`
+  // this is a comment
+  MATCH (a)-[r:FOO_BAR]-() RETURN r AS edge`
+
+  doubt['An edge can be created']({
+    because: edge,
+    is     : {
+      [SYMBOLS.ID]                 : 0,
+      [SYMBOLS.EDGE_LABEL]         : 'FOO_BAR',
+      [SYMBOLS.SOURCE_NODE_ID]     : 1,
+      [SYMBOLS.DESTINATION_NODE_ID]: 2,
+    },
+  })
+
+  await graph.run/* cypher */`
+  MATCH (a)-[:FOO_BAR]-(b)
+  DELETE a, b
+  `
+
   try {
-    await graph.run`CREATE (${ { a: { b: 1 } } })`
+    await graph.run/* cypher */`CREATE (${ { a: { b: 1 } } })`
   } catch (error) {
     doubt['Nesting objects throws an error']({
       because: error.message,
@@ -82,7 +102,7 @@ try {
   }
 
   try {
-    await graph.run`CREATE (a) SET a.hoes = ${ [{ a: 1 }] }`
+    await graph.run/* cypher */`CREATE (a) SET a.hoes = ${ [{ a: 1 }] }`
   } catch (error) {
     doubt['Nesting objects in an array throws an error']({
       because: error.message,
@@ -92,7 +112,9 @@ try {
   }
 
   try {
-    await graph.run`CREATE (a) ${ plus_equals('a', { a: { b: 3 } }) }`
+    await graph.run/* cypher */`CREATE (a) ${ plus_equals('a', {
+      a: { b: 3 },
+    }) }`
   } catch (error) {
     doubt['Nesting objects in an operator also throws an error']({
       because: error.message,
@@ -116,12 +138,12 @@ try {
   })
 
   doubt['A node can be deleted']({
-    because: await graph.run`MATCH (a:User) DELETE a`,
+    because: await graph.run/* cypher */`MATCH (a:User) DELETE a`,
     is     : undefined,
   })
 
   doubt['No result is a valid result']({
-    because: await graph.run`MATCH (a:Bird) RETURN a`,
+    because: await graph.run/* cypher */`MATCH (a:Bird) RETURN a`,
     is     : [],
   })
 
@@ -135,7 +157,7 @@ try {
   }
 
   doubt['A path can be queried']({
-    because: await graph.run`
+    because: await graph.run/* cypher */`
     MERGE (foo:User ${ {
     name: 'sceat',
   } })-[:Knows]->(thanos { name: 'Thanos', age: ${ 5

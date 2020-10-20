@@ -104,26 +104,11 @@ export default ({ find_label, find_relation, find_property }) => {
         const sub_result = []
 
         for (const [[cell_type, label], cell] of sequence) {
-          switch (cell_type) {
-            case RESULT_TYPE.NODE:
-              sub_result.push([label, await Parser.node(cell)])
-              break
-
-            case RESULT_TYPE.RELATION:
-              sub_result.push([label, await Parser.edge(cell)])
-              break
-
-            case RESULT_TYPE.SCALAR:
-              sub_result.push([label, await Parser.scalar(cell)])
-              break
-
-            /* c8 ignore next 4 */
-            // hardly testable
-            case RESULT_TYPE.UNKNOWN:
-              throw new Error(`Cell of type ${ cell_type } is unkown`)
-
-            // no default
-          }
+          if (cell_type === 1)
+            sub_result.push([label, await Parser.scalar(cell)])
+          /* c8 ignore next 2 */
+          // hardly testable
+          else throw new Error(`Cell of type ${ cell_type } is unkown`)
         }
 
         results.push(Object.fromEntries(sub_result))
