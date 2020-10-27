@@ -77,7 +77,7 @@ export default client => {
               else ice_log(x)
             })
 
-        try_log(query)
+        try_log('%O', query)
 
         try {
           const result = await query_graph(query)
