@@ -62,6 +62,7 @@ export default client => {
         const parameter_log = log.extend(`⚙️  [${ query_log_counter }]`)
         const comment_log = ice_log.extend(`💡 [${ query_log_counter }]`)
         const log_stats = log.extend(`⚡️ [${ query_log_counter }]`)
+        const try_log = log.extend(`try it yourself [${ query_log_counter }]`)
 
         parameter_log(
             ` CYPHER %O`,
@@ -75,6 +76,8 @@ export default client => {
                 comment_log('%O', x.slice(x.indexOf('//') + 3))
               else ice_log(x)
             })
+
+        try_log(query)
 
         try {
           const result = await query_graph(query)
