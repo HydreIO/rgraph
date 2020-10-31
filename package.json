@@ -41,16 +41,16 @@
 	},
 	"dependencies": {
 		"debug": "^4.2.0",
-		"ioredis": "^4.17.3"
+		"ioredis": "^4.19.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.12.3",
 		"@hydre/doubt": "^7.1.0",
 		"@sidy/eslint-config-sidy": "^1.4.15",
 		"babel-eslint": "^11.0.0-beta.2",
-		"c8": "^7.3.4",
+		"c8": "^7.3.5",
 		"dockerode": "^3.2.1",
-		"eslint": "^7.11.0",
+		"eslint": "^7.12.1",
 		"eslint-plugin-unicorn": "^23.0.0",
 		"prettier-eslint-cli": "^5.0.0",
 		"tap-spec-emoji": "^6.1.2"
