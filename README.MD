@@ -139,14 +139,10 @@ import { Internals } from '@hydre/rgraph'
 
 ## Operators
 
-The library provide some operators to allow usage of cypher feature not yet supported by RedisGraph
+The library provide some additional operators
 
 ```js
-import { plus_equals, raw } from '@hydre/rgraph/operators'
-
-const vanillaQuery = `SET user += $user`
-const rgraphQuery = `SET ${ plus_equals('user', user) }`
-// this will yield an inline query SET user.foo = foo, user.bar = bar
+import { raw } from '@hydre/rgraph/operators'
 
 const maybe = false ? 'AND 1 = 2' : ''
 const conditionnal = `WHERE 1 = 1 ${ raw(maybe) }`

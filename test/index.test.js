@@ -8,7 +8,7 @@ import Redis from 'ioredis'
 import events from 'events'
 import Rgraph from '../src/index.js'
 import { SYMBOLS } from '../src/constant.js'
-import { plus_equals, raw } from '../src/operators.js'
+import { raw } from '../src/operators.js'
 
 const through = new PassThrough()
 
@@ -57,10 +57,7 @@ try {
     hey        : () => 'listen',
   }
 
-  await graph.run/* cypher */`CREATE (a:User {origin: 'america'}) SET ${ plus_equals(
-      'a',
-      user,
-  ) }`
+  await graph.run/* cypher */`CREATE (a:User {origin: 'america'}) SET a += ${ user }`
   await graph.run/* cypher */`CREATE ()-[:FOO_BAR]->()`
 
   const [{ paul }] = await graph.run/* cypher */`
@@ -112,9 +109,7 @@ try {
   }
 
   try {
-    await graph.run/* cypher */`CREATE (a) ${ plus_equals('a', {
-      a: { b: 3 },
-    }) }`
+    await graph.run/* cypher */`CREATE (a) += ${ { a: { b: 3 } } }`
   } catch (error) {
     doubt['Nesting objects in an operator also throws an error']({
       because: error.message,
@@ -161,7 +156,7 @@ try {
     MERGE (foo:User ${ {
     name: 'sceat',
   } })-[:Knows]->(thanos { name: 'Thanos', age: ${ 5
-      + 5 }, a: ${ true }, b: ${ 922337203 }, c: ${ 51.000000000016 }, d: ${ 0 }, e: ${ undefined } })
+      + 5 }, a: ${ true }, b: ${ 922337203 }, c: ${ 51.000000000016 }, d: ${ 0 } })
     WITH foo, thanos
     MATCH path = ()-[]-()
     RETURN path`,
@@ -181,7 +176,6 @@ try {
               b                    : 922337203,
               c                    : 51.000000000016,
               d                    : 0,
-              e                    : undefined,
               [SYMBOLS.ID]         : 5,
               [SYMBOLS.NODE_LABELS]: [],
             },
@@ -298,7 +292,6 @@ try {
               b                    : 922337203,
               c                    : 51.000000000016,
               d                    : 0,
-              e                    : undefined,
               [SYMBOLS.ID]         : 5,
               [SYMBOLS.NODE_LABELS]: [],
             },
