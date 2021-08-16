@@ -9,11 +9,11 @@
 		"./operators": "./src/operators.js"
 	},
 	"scripts": {
-		"test": "node --harmony-top-level-await test/index.test.js",
-		"coverage": "c8 --check-coverage node --harmony-top-level-await test/index.test.js",
+		"test": "node test/index.test.js",
+		"coverage": "c8 --check-coverage node test/index.test.js",
 		"lint": "prettier-eslint $PWD/\"**/*.js\" --print-width 80 --list-different && eslint --color .",
 		"format": "prettier-eslint $PWD/\"**/*.js\" --print-width 80 --write",
-		"example": "DEBUG='rgraph*' node --harmony-top-level-await example/index.js",
+		"example": "DEBUG='rgraph*' node example/index.js",
 		"postversion": "git push && git push --tags"
 	},
 	"repository": {

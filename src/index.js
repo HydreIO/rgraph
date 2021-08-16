@@ -88,7 +88,7 @@ export default client => {
           if (rows) {
             const parsed_result = await parser.result_set(result)
             const inspected = util.inspect(parsed_result, {
-              depth : Infinity,
+              depth : Number.POSITIVE_INFINITY,
               colors: true,
             })
 

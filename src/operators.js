@@ -4,7 +4,7 @@ import { inspect } from 'util'
 
 const без_symbol = ([key]) => typeof key !== 'symbol'
 const unsuported_nested = object =>
-  new Error(`${ inspect(object, { depth: Infinity }) } \
+  new Error(`${ inspect(object, { depth: Number.POSITIVE_INFINITY }) } \
 is a nested object and thus \
 not currently supported in redisgraph`)
 
