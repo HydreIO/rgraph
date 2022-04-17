@@ -1,6 +1,6 @@
 const PROCEDURES = {
-  LABELS    : 'db.labels()',
-  RELATIONS : 'db.relationshipTypes()',
+  LABELS: 'db.labels()',
+  RELATIONS: 'db.relationshipTypes()',
   PROPERTIES: 'db.propertyKeys()',
 }
 
@@ -20,16 +20,16 @@ export default client => graph_name => {
     const to_yield = procedure.slice(3, -3)
     const refresh = async current_keys => {
       const [, missing] = await client.call(
-          'graph.QUERY',
-          graph_name,
-          [
-            `CALL ${ procedure }`,
-            `YIELD ${ to_yield }`,
-            `RETURN ${ to_yield }`,
-            `SKIP ${ cache.get(procedure).length }`,
-          ]
-              .join(' ')
-              .trim(),
+        'graph.QUERY',
+        graph_name,
+        [
+          `CALL ${procedure}`,
+          `YIELD ${to_yield}`,
+          `RETURN ${to_yield}`,
+          `SKIP ${cache.get(procedure).length}`,
+        ]
+          .join(' ')
+          .trim()
       )
 
       if (missing.some(a => a.length > 1))
@@ -55,10 +55,10 @@ export default client => graph_name => {
   return {
     query_graph(cypher) {
       const normalized = cypher
-          .split('\n')
-          .map(x => x.trim())
-          .filter(x => !x.startsWith('//'))
-          .join(' ')
+        .split('\n')
+        .map(x => x.trim())
+        .filter(x => !x.startsWith('//'))
+        .join(' ')
 
       return client.call('graph.QUERY', graph_name, normalized, '--compact')
     },
@@ -66,7 +66,7 @@ export default client => graph_name => {
       client.call('graph.DELETE', graph_name)
       reset_cache()
     },
-    find_label   : proceed(PROCEDURES.LABELS),
+    find_label: proceed(PROCEDURES.LABELS),
     find_relation: proceed(PROCEDURES.RELATIONS),
     find_property: proceed(PROCEDURES.PROPERTIES),
   }

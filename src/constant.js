@@ -12,26 +12,25 @@ const debug = Debug('rgraph')
 
 export const DATA_TYPE = {
   UNKNOWN: 0,
-  NULL   : 1,
-  STRING : 2,
+  NULL: 1,
+  STRING: 2,
   INTEGER: 3,
   BOOLEAN: 4,
-  DOUBLE : 5,
-  ARRAY  : 6,
-  EDGE   : 7,
-  NODE   : 8,
-  PATH   : 9,
+  DOUBLE: 5,
+  ARRAY: 6,
+  EDGE: 7,
+  NODE: 8,
+  PATH: 9,
+  MAP: 10,
 }
-
 export const SYMBOLS = {
-  ID                 : Symbol('id'),
-  NODE_LABELS        : Symbol('node labels'),
-  EDGE_LABEL         : Symbol('edge label'),
-  SOURCE_NODE_ID     : Symbol('source_node id'),
+  ID: Symbol('id'),
+  NODE_LABELS: Symbol('node labels'),
+  EDGE_LABEL: Symbol('edge label'),
+  SOURCE_NODE_ID: Symbol('source_node id'),
   DESTINATION_NODE_ID: Symbol('destination_node id'),
-  OPERATOR           : Symbol('operator'),
+  OPERATOR: Symbol('operator'),
 }
-
 export const LOG = {
   rgraph: debug,
   parser: debug.extend('parser'),

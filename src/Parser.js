@@ -1,5 +1,8 @@
 import { DATA_TYPE, SYMBOLS, LOG } from './constant.js'
 
+const chunk_array = (array, n) =>
+  array.length ? [array.slice(0, n), ...chunk_array(array.slice(n), n)] : []
+
 export default ({ find_label, find_relation, find_property }) => {
   const Parser = {
     // eslint-disable-next-line complexity, consistent-return
@@ -8,25 +11,25 @@ export default ({ find_label, find_relation, find_property }) => {
         case DATA_TYPE.STRING:
           return value
 
-        case DATA_TYPE.INTEGER:
+        case DATA_TYPE.INTEGER: {
           const number_value = BigInt(value)
 
           if (number_value <= Number.MAX_SAFE_INTEGER) return +value
           return number_value
-
+        }
         case DATA_TYPE.DOUBLE:
           return +value
 
         case DATA_TYPE.BOOLEAN:
           return value === 'true'
 
-        case DATA_TYPE.ARRAY:
+        case DATA_TYPE.ARRAY: {
           const result = []
 
           for (const sub_value of value)
             result.push(await Parser.scalar(sub_value))
           return result
-
+        }
         case DATA_TYPE.NODE:
           return Parser.node(value)
 
@@ -36,10 +39,25 @@ export default ({ find_label, find_relation, find_property }) => {
         case DATA_TYPE.PATH:
           return Parser.path(value)
 
+        case DATA_TYPE.MAP:
+          return Parser.map(value)
+
         /* c8 ignore next 3 */
         // freaking github runner that pass the coverage randomly
         // no default
       }
+    },
+    async map(properties) {
+      const chunked = chunk_array(properties, 2)
+
+      return Object.fromEntries(
+        await Promise.all(
+          chunked.map(async ([property_name, property]) => [
+            property_name,
+            await Parser.scalar(property),
+          ])
+        )
+      )
     },
     async property([key, type, value]) {
       return [await find_property(key), await Parser.scalar([type, value])]
@@ -61,18 +79,18 @@ export default ({ find_label, find_relation, find_property }) => {
       for (const label of node_labels) labels.push(await find_label(label))
 
       return {
-        [SYMBOLS.ID]         : id,
+        [SYMBOLS.ID]: id,
         [SYMBOLS.NODE_LABELS]: labels,
-        ...await Parser.properties(properties),
+        ...(await Parser.properties(properties)),
       }
     },
     async edge([id, type, source_node_id, destination_node_id, properties]) {
       return {
-        [SYMBOLS.ID]                 : id,
-        [SYMBOLS.EDGE_LABEL]         : await find_relation(type),
-        [SYMBOLS.SOURCE_NODE_ID]     : source_node_id,
+        [SYMBOLS.ID]: id,
+        [SYMBOLS.EDGE_LABEL]: await find_relation(type),
+        [SYMBOLS.SOURCE_NODE_ID]: source_node_id,
         [SYMBOLS.DESTINATION_NODE_ID]: destination_node_id,
-        ...await Parser.properties(properties),
+        ...(await Parser.properties(properties)),
       }
     },
     async row(path) {
@@ -108,7 +126,7 @@ export default ({ find_label, find_relation, find_property }) => {
             sub_result.push([label, await Parser.scalar(cell)])
           /* c8 ignore next 2 */
           // hardly testable
-          else throw new Error(`Cell of type ${ cell_type } is unkown`)
+          else throw new Error(`Cell of type ${cell_type} is unkown`)
         }
 
         results.push(Object.fromEntries(sub_result))

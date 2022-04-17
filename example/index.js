@@ -1,6 +1,8 @@
-import Rgraph from '../src/index.js'
-import Redis from 'ioredis'
 import Events from 'events'
+
+import Redis from 'ioredis'
+
+import Rgraph from '../src/index.js'
 
 const client = new Redis()
 const Graph = Rgraph(client)
@@ -11,7 +13,7 @@ const user = {
 }
 
 await Events.once(client, 'ready')
-await foo.run/* cypher */`MERGE (tony:User ${ user })
+await foo.run/* cypher */ `MERGE (tony:User ${user})
 // comments are supported yay! 🦆
 RETURN tony`
 await foo.delete()

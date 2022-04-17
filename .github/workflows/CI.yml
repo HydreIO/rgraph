@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: 14.13
           registry-url: https://registry.npmjs.org/
-          scope: "@hydre"
+          scope: '@hydre'
       - run: npm ci
       - run: npm publish
         env:

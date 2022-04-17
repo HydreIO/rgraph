@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  redisgraph:
+    image: redislabs/redisgraph:edge
+    ports:
+      - 6379:6379
